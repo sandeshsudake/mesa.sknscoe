@@ -243,38 +243,49 @@
         <h2 class="modal-title">Edit Profile</h2>
         <form id="editProfileForm" method="post" th:action="@{/updateProfile}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <div class="alert alert-info" role="alert">
-                This is a info alert—check it out!
+
+            <!-- Professional Error/Success Message Display -->
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}"></span>
             </div>
-            <input type="hidden" name="username" id="editUsername" />
+            <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                <span th:text="${successMessage}"></span>
+            </div>
+            <!-- Original alert-info can be removed or used for static info -->
+            <!-- <div class="alert alert-info" role="alert">
+                This is a info alert—check it out!
+            </div> -->
+
+            <input type="hidden" name="userName" id="editUsername" />
             <div class="modal-group">
                 <label for="editFullName">Full Name</label>
-                <input type="text" id="editFullName" name="fullName" required />
+                <input type="text" id="editFullName" name="userFullName" required />
             </div>
             <div class="modal-group">
                 <label for="editClass">Class</label>
-                <input type="text" id="editClass" name="studentClass" required />
+                <input type="text" id="editClass" name="userClass" required />
             </div>
             <div class="modal-group">
                 <label for="editBranch">Branch</label>
-                <input type="text" id="editBranch" name="branch" required />
+                <input type="text" id="editBranch" name="userBranch" required />
             </div>
             <div class="modal-group">
                 <label for="editCollege">College</label>
-                <input type="text" id="editCollege" name="college" required />
+                <input type="text" id="editCollege" name="userCollege" required />
             </div>
             <div class="modal-group">
                 <label for="editEmail">Email</label>
-                <input type="email" id="editEmail" name="email" required />
+                <input type="email" id="editEmail" name="userMail" required />
             </div>
             <div class="modal-group">
                 <label for="editMobileNo">Mobile Number</label>
-                <input type="tel" id="editMobileNo" name="mobileNo" required pattern="[0-9]{10}" />
+                <input type="tel" id="editMobileNo" name="userMobile" required pattern="[0-9]{10}" />
             </div>
             <button type="submit" class="submit-btn">Save Changes</button>
         </form>
     </div>
 </div>
+
 
 <div id="registerToast" class="register-toast">
     <div class="toast-progress"></div>

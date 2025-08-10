@@ -173,4 +173,60 @@ public class userController {
 
         return "redirect:/user";
     }
+
+    @PostMapping("/updateProfile")
+    public String updateProfile(user updatedUser, // Spring will bind form fields here
+                                @CurrentSecurityContext(expression = "authentication?.name") String currentUsername,
+                                RedirectAttributes redirectAttributes) {
+
+        // --- SECURITY CHECK (CRUCIAL!) ---
+        // Ensure the user is only updating their OWN profile.
+        // The 'userName' from the form should match the 'currentUsername' from Spring Security.
+        if (updatedUser.getUserName() == null || !updatedUser.getUserName().equals(currentUsername)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Security Alert: Unauthorized profile update attempt!");
+            return "redirect:/user"; // Redirect back to user page with error
+        }
+
+        // 1. Retrieve the EXISTING user from the database.
+        // This is vital to avoid overwriting unsubmitted fields (like userPassword, userId, idRole, userQrURL, registeredEventIds).
+        user existingUser = userRepo.findByUserName(currentUsername);
+
+        if (existingUser != null) {
+            // 2. Update ONLY the fields that are allowed to be changed via this form.
+            // DO NOT update sensitive fields like userPassword, userId, or idRole here.
+            existingUser.setUserFullName(updatedUser.getUserFullName());
+            existingUser.setUserClass(updatedUser.getUserClass());
+            existingUser.setUserBranch(updatedUser.getUserBranch());
+            // FIX: Changed updatedUser.getCollege() to updatedUser.getUserCollege()
+            existingUser.setUserCollege(updatedUser.getUserCollege());
+            // IMPORTANT: Handle unique constraints for userMail and userMobile
+            // You might need more sophisticated logic here if these fields can change and might conflict.
+            // For simplicity, we'll just update directly, assuming validation handles uniqueness.
+            existingUser.setUserMail(updatedUser.getUserMail());
+            existingUser.setUserMobile(updatedUser.getUserMobile());
+
+            try {
+                // 3. Save the updated user object back to the database.
+                userRepo.save(existingUser);
+                // 4. Add a success flash attribute for the toast message.
+                redirectAttributes.addFlashAttribute("successMessage", "🎉 Profile updated successfully!");
+            } catch (org.springframework.dao.DuplicateKeyException e) {
+                // Handle unique constraint violation (e.g., email or mobile already exists)
+                redirectAttributes.addFlashAttribute("errorMessage", "Error: Email or Mobile Number already in use. Please use a different one.");
+            } catch (Exception e) {
+                // Catch any other unexpected errors during save
+                redirectAttributes.addFlashAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
+            }
+
+        } else {
+            // This case should ideally not be reached if the user is logged in.
+            redirectAttributes.addFlashAttribute("errorMessage", "Error: User profile not found.");
+        }
+
+        // 5. Redirect back to the user's profile page.
+        return "redirect:/user";
+    }
+
+
+
 }
