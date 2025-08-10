@@ -1,4 +1,4 @@
-package com.sandeshsudake.MesaV2.service;
+package com.sandeshsudake.MesaV2.service; // Assuming this package
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
@@ -13,19 +13,39 @@ public class StaticResourceConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        // Cache images for 30 days
-        registry.addResourceHandler("/images/**")
-                .addResourceLocations("classpath:/static/images/")
-                .setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).cachePublic());
+        // Images: Cache for 30 days (long cache, as images don't change frequently)
+        registry.addResourceHandler(
+                        "/mesa-logo/**",
+                        "/slider-img/**",
+                        "/gallery*.jpg",
+                        "/team*.jpg",
+                        "/speaker*.jpg",
+                        "/outgoing*.jpg",
+                        "/images/**") // Ensure all image paths are covered
+                .addResourceLocations(
+                        "classpath:/static/mesa-logo/",
+                        "classpath:/static/slider-img/",
+                        "classpath:/static/", // For images directly in static
+                        "classpath:/static/images/") // For images in a dedicated /static/images folder
+                .setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).cachePublic().noTransform());
 
-        // No cache for CSS and JS (always load fresh after deploy)
+
+        // CSS and JS: No cache (always load fresh after deploy)
+        // This will force the browser to re-download these files on every visit.
         registry.addResourceHandler("/css/**", "/js/**")
                 .addResourceLocations("classpath:/static/css/", "classpath:/static/js/")
-                .setCacheControl(CacheControl.noStore());
+                .setCacheControl(CacheControl.noStore()); // Changed to noStore()
 
-        // No cache for HTML
-        registry.addResourceHandler("/*.html")
+
+        // HTML: No cache (always load fresh)
+        // This will force the browser to re-download HTML files on every visit.
+        registry.addResourceHandler("/*.html", "/") // Also apply to the root path
                 .addResourceLocations("classpath:/static/")
-                .setCacheControl(CacheControl.noStore());
+                .setCacheControl(CacheControl.noStore()); // Changed to noStore()
+
+        // Favicon and other root-level static files: Cache for a moderate period
+        registry.addResourceHandler("/favicon.ico")
+                .addResourceLocations("classpath:/static/")
+                .setCacheControl(CacheControl.maxAge(7, TimeUnit.DAYS).cachePublic().noTransform());
     }
 }

@@ -13,6 +13,7 @@
 <body>
 <div class="login-container">
     <div class="login-card">
+
         <div class="brand">
             <img th:src="@{/mesa-logo/MESA-Logo.jpg}" alt="MESA Logo" />
             <span>MESA Portal</span>
@@ -20,10 +21,13 @@
 
         <h1 class="login-title">Login to MESA Portal</h1>
 
-        <div class="error-message" id="errorMessage">
+
+        <!-- Dynamic Error Message Display -->
+        <div th:if="${loginError}" class="alert alert-danger" id="loginErrorMessage">
             <i class="fa fa-exclamation-circle"></i>
-            <span>Invalid username or password. Please try again.</span>
+            <span th:text="${errorMessageText}">Invalid username or password. Please try again.</span>
         </div>
+
 
         <form id="loginForm" method="post" th:action="@{/login}">
             <!-- FIX: Added hidden input for CSRF token -->

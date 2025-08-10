@@ -58,6 +58,20 @@ public class adminController {
         List<FRF> frfList = frfRepo.findAll();
         model.addAttribute("frfList",frfList);
 
+        // Fetch counts from repositories
+        long eventCount = eventRepo.count();
+        long regCount = registrationRepo.count();
+        long frfCount = frfRepo.count();
+        long userCount = userRepo.count();
+
+        // Add counts to the model
+        model.addAttribute("eventCount", eventCount);
+        model.addAttribute("regCount", regCount);
+        model.addAttribute("frfCount", frfCount);
+        model.addAttribute("userCount", userCount);
+
+
+
         return "admin";
     }
 

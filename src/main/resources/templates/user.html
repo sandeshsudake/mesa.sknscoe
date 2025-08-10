@@ -9,6 +9,9 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
 <nav class="navbar">
@@ -337,6 +340,38 @@
 </footer>
 
 <button id="backToTopBtn" title="Back to Top" aria-label="Back to Top">&#8679;</button>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Query all logout buttons with classes 'logout-btn' or 'logout-btn-as-link'
+    const logoutButtons = document.querySelectorAll('.logout-btn, .logout-btn-as-link');
+
+    logoutButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent immediate form submit
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be logged out from your session.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, log me out!',
+                cancelButtonText: 'No, stay logged in'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the closest form enclosing the button
+                    const form = e.target.closest('form');
+                    if (form) {
+                        form.submit();
+                    }
+                }
+            });
+        });
+    });
+</script>
 
 <script th:src="@{/js/user.js}"></script>
 </body>

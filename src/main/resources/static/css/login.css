@@ -180,3 +180,62 @@ body {
         padding: 0.7em;
     }
 }
+
+
+/* Professional Alert Styles */
+.alert {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 10px; /* Slightly more rounded corners */
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: left;
+    display: flex; /* Use flex for icon and text alignment */
+    align-items: center;
+    gap: 12px; /* Increased space between icon and text */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Subtle shadow for alerts */
+    animation: fadeInSlideDown 0.5s ease-out; /* Fade in and slide down animation */
+}
+
+.alert .fa {
+    font-size: 1.3em; /* Slightly larger icon */
+    min-width: 1.3em; /* Ensure icon doesn't collapse */
+    text-align: center; /* Center icon within its space */
+}
+
+.alert-danger {
+    color: #a72a3a; /* Darker red text */
+    background-color: #ffe0e0; /* Lighter red background */
+    border: 1px solid #ffc0c0; /* Matching border */
+}
+
+.alert-success {
+    color: #2a7a3a; /* Darker green text */
+    background-color: #e0ffe0; /* Lighter green background */
+    border: 1px solid #c0ffc0; /* Matching border */
+}
+
+/* Keyframe for alert animation */
+@keyframes fadeInSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments for alerts */
+@media (max-width: 480px) {
+    .alert {
+        font-size: 0.85rem;
+        padding: 10px 15px;
+        gap: 8px;
+    }
+    .alert .fa {
+        font-size: 0.9em;
+    }
+}
+

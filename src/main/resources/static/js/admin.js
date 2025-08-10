@@ -1,18 +1,3 @@
-// Function to simulate fetching and displaying dashboard data
-function loadDashboardData() {
-    const data = {
-        totalEvents: 12,
-        totalRegistrations: 256,
-        totalFrf: 42,
-        totalUsers: 850
-    };
-
-    document.getElementById('totalEvents').textContent = data.totalEvents;
-    document.getElementById('totalRegistrations').textContent = data.totalRegistrations;
-    document.getElementById('totalFrf').textContent = data.totalFrf;
-    document.getElementById('totalUsers').textContent = data.totalUsers;
-}
-
 // --- Modal and Form Logic ---
 const hamburger = document.getElementById('hamburger');
 const navLinks = document.getElementById('navLinks');
@@ -239,15 +224,4 @@ if (deleteConfirmBtn && deleteCancelBtn && deleteConfirmModal) {
 // The 'eventForm' submission listener is removed, as it's no longer needed.
 // The browser will handle the form submission.
 
-// Logout functionality
-const logoutButton = document.querySelector('.logout-btn');
-if (logoutButton) {
-    logoutButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('You have been logged out!');
-        window.location.href = 'index.html';
-    });
-}
 
-// Initial data load on page load
-window.onload = loadDashboardData;
