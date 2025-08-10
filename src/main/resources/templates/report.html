@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${event.eventName} + ' - Report'">Event Report</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+  <style>
+    /* General Body Styles */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f7fc;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+
+    /* Main container for the report */
+    .report-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Header Section */
+    .report-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .report-title {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #1a3a6e;
+        margin: 0;
+    }
+
+    /* Stats Card */
+    .stats-card {
+        background: linear-gradient(135deg, #1a3a6e, #0078d7);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .stats-card h3 {
+        margin: 0 0 0.5rem 0;
+        font-weight: 300;
+        font-size: 1rem;
+    }
+
+    .stats-card p {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    /* Toolbar for buttons and search */
+    .report-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .export-buttons {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .export-btn {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 20px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #495057;
+    }
+
+    .export-btn:hover {
+        background-color: #e9ecef;
+        border-color: #adb5bd;
+        transform: translateY(-2px);
+    }
+
+    .export-btn .fa {
+        color: #0078d7;
+    }
+
+    /* Search Bar */
+    .search-bar {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    #searchInput {
+        width: 100%;
+        padding: 0.6rem 1rem;
+        border-radius: 20px;
+        border: 1px solid #ced4da;
+        font-size: 0.9rem;
+    }
+
+    #searchInput:focus {
+        outline: none;
+        border-color: #0078d7;
+        box-shadow: 0 0 0 2px rgba(0, 120, 215, 0.2);
+    }
+
+    /* Table Styles */
+    .table-container {
+        overflow-x: auto; /* Makes table scrollable on small screens */
+    }
+
+    .event-management-table {
+        border-collapse: collapse; /* modern reset */
+        width: 100%;
+        font-size: 0.95rem;
+    }
+
+    .event-management-table th, .event-management-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .event-management-table thead th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .event-management-table tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+
+    .payment-proof-img {
+        width: 80px;
+        height: auto;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .payment-proof-img:hover {
+        transform: scale(2.5); /* A bit less aggressive zoom */
+    }
+
+    /* Print-specific styles */
+    @media print {
+        body {
+            background-color: #fff;
+            padding: 0;
+            font-size: 10pt;
+        }
+        .report-container {
+            box-shadow: none;
+            margin: 0;
+            padding: 0;
+            border-radius: 0;
+        }
+        .report-toolbar, .export-buttons {
+            display: none;
+        }
+        .no-print { /* Class to hide columns on print */
+            display: none;
+        }
+        .event-management-table {
+            width: 100%;
+        }
+    } /* Print-specific styles */
+        @media print {
+            @page {
+                size: A4 landscape; /* Tells the browser to print in landscape mode */
+                margin: 20mm;
+            }
+
+            body {
+                background-color: #fff;
+                padding: 0;
+                font-size: 9pt; /* Smaller font for a better fit */
+                -webkit-print-color-adjust: exact; /* Ensures colors print correctly */
+                print-color-adjust: exact;
+            }
+
+            .report-container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                border-radius: 0;
+                width: 100%;
+            }
+
+            /* Hide all non-essential elements */
+            .report-toolbar, .stats-card {
+                display: none;
+            }
+
+            .report-header {
+                text-align: center; /* Center header for print */
+                justify-content: center;
+            }
+
+            .no-print, .payment-proof-img {
+                display: none; /* Hides the payment proof column */
+            }
+
+            .table-container {
+                overflow: visible; /* Ensure nothing is hidden by overflow */
+            }
+
+            .event-management-table {
+                width: 100%;
+                table-layout: auto;
+            }
+
+            .event-management-table th, .event-management-table td {
+                padding: 6px 8px; /* Reduced padding for more space */
+            }
+
+            .event-management-table tbody tr {
+                page-break-inside: avoid; /* Prevents rows from splitting across pages */
+            }
+        }
+  </style>
+</head>
+<body>
+
+<div class="report-container">
+  <header class="report-header">
+    <h1 class="report-title" th:text="${event.eventName}">Event Name</h1>
+    <div class="stats-card">
+      <h3>Total Registrations</h3>
+      <p th:text="${#lists.size(registrations)}">0</p>
+    </div>
+  </header>
+
+  <div class="report-toolbar">
+    <div class="export-buttons">
+      <button id="exportPdf" class="export-btn"><i class="fa fa-file-pdf-o"></i> PDF</button>
+      <button id="exportExcel" class="export-btn"><i class="fa fa-file-excel-o"></i> Excel</button>
+      <button id="printReport" class="export-btn"><i class="fa fa-print"></i> Print</button>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search in table...">
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="event-management-table" id="reportTable">
+      <thead>
+      <tr>
+        <th>Student Name</th>
+        <th>Class</th>
+        <th>Branch</th>
+        <th>College</th>
+        <th>Mobile No</th>
+        <th>UTR</th>
+        <th class="no-print">Payment Proof</th> </tr>
+      </thead>
+      <tbody>
+      <tr th:each="reg : ${registrations}">
+        <td data-label="Student Name" th:text="${reg.studentName}"></td>
+        <td data-label="Class" th:text="${reg.studentClass}"></td>
+        <td data-label="Branch" th:text="${reg.branch}"></td>
+        <td data-label="College" th:text="${reg.collegeName}"></td>
+        <td data-label="Mobile No" th:text="${reg.mobileNo}"></td>
+        <td data-label="UTR" th:text="${reg.utrNumber}"></td>
+        <td data-label="Payment Proof" class="no-print"> <a th:href="${reg.paymentProofURL}" target="_blank">
+          <img th:src="${reg.paymentProofURL}" alt="Proof" class="payment-proof-img">
+        </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script th:src="@{/js/report.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Responsive Navbar</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}"/>
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+</head>
+<body>
+<nav class="navbar">
+    <div class="brand">
+        <img th:src="@{/mesa-logo/MESA-Logo.jpg}" alt="Brand Logo"/>
+        <span>MESA</span>
+    </div>
+    <div
+            class="hamburger"
+            id="hamburger"
+            aria-label="Toggle navigation"
+            aria-expanded="false"
+            aria-controls="navLinks"
+            tabindex="0"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div class="nav-links" id="navLinks">
+        <a href="#">Home</a>
+        <a href="#about">About</a>
+        <a href="#events">Events</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#" class="frf-link">FRF <sup class="new">New</sup></a>
+        <a href="#contact">Contact</a>
+        <a th:href="@{/userRegForm}" class="register-btn">Register</a> <br>
+        <a th:href="@{/login}" class="login-btn">Login</a>
+    </div>
+</nav>
+
+<div class="slider" id="slider">
+    <div class="slides">
+        <img
+                th:src="@{/slider-img/InaugurationofDepartmentEvents.png}"
+                alt="Slide 1"
+                class="slide active"
+        />
+        <img th:src="@{/slider-img/Spectrum.png}" alt="Slide 2" class="slide"/>
+        <img th:src="@{/slider-img/speech&resumewriting.png}" alt="Slide 3" class="slide"/>
+    </div>
+    <button
+            class="slider-btn prev"
+            id="prevBtn"
+            aria-label="Previous slide"
+    >&#10094;</button>
+    <button
+            class="slider-btn next"
+            id="nextBtn"
+            aria-label="Next slide"
+    >&#10095;</button>
+</div>
+
+<div class="section-divider"></div>
+
+<section class="about-section" id="about">
+    <div class="about-content">
+        <div class="about-text">
+            <h2>
+                <span class="about-accent"></span>
+                About MESA
+            </h2>
+            <p>
+                The Mechanical Engineering Students' Association (MESA) is a dynamic
+                student body dedicated to fostering excellence and innovation among
+                mechanical engineering students. We provide a platform for students
+                to enhance their technical skills, explore career opportunities, and
+                engage in co-curricular activities.
+            </p>
+            <ul>
+                <li><span class="about-icon">✔</span> Hands-on workshops and technical sessions</li>
+                <li><span class="about-icon">✔</span> Expert talks and industrial visits</li>
+                <li><span class="about-icon">✔</span> Design and innovation challenges</li>
+                <li><span class="about-icon">✔</span> Networking opportunities with professionals</li>
+            </ul>
+        </div>
+        <div class="about-stats">
+            <div class="stat-card">
+                <div class="stat-number" data-target="500">0</div>
+                <div class="stat-label">Active Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="30">0</div>
+                <div class="stat-label">Annual Events</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="10">0</div>
+                <div class="stat-label">Industry Partners</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="events-section" id="events">
+    <div class="events-header">
+        <h2>
+            <span class="events-accent"></span>
+            Explore Our Events
+        </h2>
+        <div class="event-filters">
+            <button class="event-chip active" data-filter="all">All</button>
+            <button class="event-chip" data-filter="upcoming">Upcoming</button>
+            <button class="event-chip" data-filter="past">Past</button>
+        </div>
+    </div>
+    <div class="events-carousel" id="eventsCarousel">
+        <div class="event-card" th:each="event : ${events}" th:data-id="${event.eventId}">
+            <div class="event-date">
+                <span class="event-day" th:text="${event.eventDay}"></span>
+                <span class="event-month" th:text="${event.eventMonth}"></span>
+            </div>
+            <div class="event-info">
+                <h3 th:text="${event.eventName}"></h3>
+                <div class="event-meta">
+                    <span><i class="fa fa-clock-o"></i> <span th:text="${event.eventTime}"></span></span>
+                    <span><i class="fa fa-map-marker"></i> <span th:text="${event.eventLocation}"></span></span>
+                </div>
+                <p th:text="${event.eventDesc}"></p>
+                <button class="event-register">Register</button>
+            </div>
+            <span class="event-badge new">New</span>
+        </div>
+    </div>
+    <button class="carousel-btn left" id="carouselLeft" aria-label="Scroll left">&#10094;</button>
+    <button class="carousel-btn right" id="carouselRight" aria-label="Scroll right">&#10095;</button>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="gallery-section" id="gallery">
+    <div class="gallery-header">
+        <h2>
+            <span class="gallery-accent"></span>
+            Our Moments & Memories
+        </h2>
+    </div>
+    <div class="gallery-grid">
+        <div class="gallery-item">
+            <img src="gallery1.jpg" alt="Speech & Resume Writing Competition"/>
+            <div class="gallery-caption">
+                <h3>Speech & Resume Writing Competition</h3>
+                <p>Pandharpur, Maharashtra, India</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <img src="gallery2.jpg" alt="Project Presentation"/>
+            <div class="gallery-caption">
+                <h3>Project Presentation</h3>
+                <p>Innovative student projects</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <img src="gallery3.jpg" alt="Ribbon Cutting"/>
+            <div class="gallery-caption">
+                <h3>Lab Inauguration</h3>
+                <p>New facilities for students</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <img src="gallery4.jpg" alt="Workshop"/>
+            <div class="gallery-caption">
+                <h3>Automobile Workshop</h3>
+                <p>Hands-on learning</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <img src="gallery5.jpg" alt="Classroom Activity"/>
+            <div class="gallery-caption">
+                <h3>Classroom Activity</h3>
+                <p>Engaged learning</p>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <img src="gallery6.jpg" alt="Group Photo"/>
+            <div class="gallery-caption">
+                <h3>Annual Group Photo</h3>
+                <p>Our vibrant community</p>
+            </div>
+        </div>
+    </div>
+    <div class="gallery-footer">
+        <a href="#" class="gallery-btn">View All Photos</a>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="team-section" id="team">
+    <div class="team-header">
+        <h2>
+            <span class="team-accent"></span>
+            Meet Our Dedicated Team
+        </h2>
+    </div>
+    <div class="team-grid">
+        <div class="team-card">
+            <div class="team-img">
+                <img src="team1.jpg" alt="Dr.S.S.Kulkarni"/>
+            </div>
+            <h3>Dr.S.S.Kulkarni</h3>
+            <div class="team-role hod">HOD</div>
+            <p>
+                Head of the Department, providing strategic leadership and academic
+                guidance to MESA.
+            </p>
+        </div>
+        <div class="team-card">
+            <div class="team-img">
+                <img src="team2.jpg" alt="Prof.H.S.Deshpande"/>
+            </div>
+            <h3>Prof.H.S.Deshpande</h3>
+            <div class="team-role advisor">Faculty Advisor</div>
+            <p>
+                Guiding MESA initiatives, fostering student development, and ensuring
+                smooth operations.
+            </p>
+        </div>
+        <div class="team-card">
+            <div class="team-img">
+                <img src="team3.jpg" alt="Mr.Saurabh Dighe"/>
+            </div>
+            <h3>Mr.Saurabh Dighe</h3>
+            <div class="team-role president">President</div>
+            <p>
+                Leading MESA, overseeing all activities, and representing the student
+                body.
+            </p>
+        </div>
+        <div class="team-card">
+            <div class="team-img">
+                <img src="team4.jpg" alt="Miss.Riya Antrolikar"/>
+            </div>
+            <h3>Miss.Riya Antrolikar</h3>
+            <div class="team-role vice">Vice-President</div>
+            <p>
+                Assisting the President in all duties and coordinating internal affairs
+                of the association.
+            </p>
+        </div>
+        <div class="team-card">
+            <div class="team-img">
+                <img src="team5.jpg" alt="Mr.Sohel Khan"/>
+            </div>
+            <h3>Mr.Sohel Khan</h3>
+            <div class="team-role event">Event Manager</div>
+            <p>
+                Responsible for planning, organizing, and executing all MESA events and
+                activities.
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="achievements-section" id="achievements">
+    <div class="achievements-header">
+        <h2>
+            <span class="achievements-accent"></span>
+            Our Key Achievements
+        </h2>
+    </div>
+    <div class="achievements-grid">
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fa fa-trophy"></i>
+            </div>
+            <h3>National Design Challenge Winner</h3>
+            <p>
+                Awarded 1st place in the national engineering design competition, 2024.
+            </p>
+        </div>
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fa fa-certificate"></i>
+            </div>
+            <h3>Best Student Chapter Award</h3>
+            <p>Recognized as the "Best Student Chapter" by ASME, 2023.</p>
+        </div>
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fa fa-lightbulb-o"></i>
+            </div>
+            <h3>Innovation Grant Recipient</h3>
+            <p>
+                Secured university funding for our innovative research project, 2024.
+            </p>
+        </div>
+        <div class="achievement-card">
+            <div class="achievement-icon">
+                <i class="fa fa-lightbulb-o"></i>
+            </div>
+            <h3>BEST DEPT</h3>
+            <p>
+                Secured university funding for our innovative research project, 2024.
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="seminars-section" id="seminars">
+    <div class="seminars-header">
+        <h2>
+            <span class="seminars-accent"></span>
+            Seminars Conducted
+        </h2>
+    </div>
+    <div class="seminars-grid">
+        <div class="seminar-card">
+            <div class="seminar-speaker-img">
+                <img src="speaker1.jpg" alt="Dr. Atul A Sagade"/>
+            </div>
+            <div class="seminar-title">Seminar On Sustainable material and Energy Engineering</div>
+            <div class="seminar-meta">
+                <span class="seminar-speaker"><i class="fa fa-user"></i> Dr.Atul A Sagade</span>
+            </div>
+            <div class="seminar-details">
+                <span><i class="fa fa-calendar"></i> 4th Oct 2024</span>
+                <span><i class="fa fa-clock-o"></i> 10.00 am to 12.00 noon</span>
+            </div>
+            <div class="seminar-desc">
+                An insightful session on the latest advancements and applications of robotics in modern industrial settings.
+            </div>
+        </div>
+        <div class="seminar-card">
+            <div class="seminar-speaker-img">
+                <img src="speaker2.jpg" alt="Prof. Emily White"/>
+            </div>
+            <div class="seminar-title">Sustainable Engineering Practices</div>
+            <div class="seminar-meta">
+                <span class="seminar-speaker"><i class="fa fa-user"></i> Prof. Emily White</span>
+            </div>
+            <div class="seminar-details">
+                <span><i class="fa fa-calendar"></i> Feb 15, 2025</span>
+                <span><i class="fa fa-clock-o"></i> 02:30 PM</span>
+            </div>
+            <div class="seminar-desc">
+                Exploring eco-friendly designs and processes to minimize environmental impact in mechanical engineering.
+            </div>
+        </div>
+        <div class="seminar-card">
+            <div class="seminar-speaker-img">
+                <img src="speaker3.jpg" alt="Mr. Robert Chen"/>
+            </div>
+            <div class="seminar-title">AI in Mechanical Design</div>
+            <div class="seminar-meta">
+                <span class="seminar-speaker"><i class="fa fa-user"></i> Mr. Robert Chen</span>
+            </div>
+            <div class="seminar-details">
+                <span><i class="fa fa-calendar"></i> Mar 10, 2025</span>
+                <span><i class="fa fa-clock-o"></i> 11:00 AM</span>
+            </div>
+            <div class="seminar-desc">
+                How artificial intelligence is revolutionizing the way mechanical components and systems are designed and optimized.
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="outgoing-section" id="outgoing">
+    <div class="outgoing-header">
+        <h2>
+            <span class="outgoing-accent"></span>
+            Best Outgoing Student
+        </h2>
+    </div>
+    <div class="outgoing-grid">
+        <div class="outgoing-card">
+            <div class="outgoing-badge trophy">
+                <i class="fa fa-trophy"></i>
+            </div>
+            <div class="outgoing-img">
+                <img src="outgoing1.jpg" alt="Amruta Kulkarni"/>
+            </div>
+            <h3 class="outgoing-name">Amruta Kulkarni</h3>
+            <p class="outgoing-year">Class of 2024</p>
+            <p class="outgoing-desc">
+                "A truly exceptional student, Amruta demonstrated outstanding academic
+                prowess and leadership in various MESA initiatives."
+            </p>
+        </div>
+        <div class="outgoing-card">
+            <div class="outgoing-badge star">
+                <i class="fa fa-star"></i>
+            </div>
+            <div class="outgoing-img">
+                <img src="outgoing2.jpg" alt="Rahul Sharma"/>
+            </div>
+            <h3 class="outgoing-name">Rahul Sharma</h3>
+            <p class="outgoing-year">Class of 2023</p>
+            <p class="outgoing-desc">
+                "Rahul's innovative projects and dedication to the mechanical
+                engineering community made him a standout student of his batch."
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="contact-section" id="contact">
+    <div class="contact-header">
+        <h2>
+            <span class="contact-accent"></span>
+            Get In Touch With Us
+        </h2>
+    </div>
+    <div class="contact-grid">
+        <div class="contact-info-card">
+            <h3>Contact Information</h3>
+            <ul class="contact-info-list">
+                <li><i class="fa fa-map-marker"></i> SKN Sinhgad College of Engineering, Pandharpur, Maharashtra 413304</li>
+                <li><i class="fa fa-envelope"></i> <a href="mailto:contact@mesa.com">contact@mesa.com</a></li>
+                <li><i class="fa fa-phone"></i> <a href="tel:+919876543210">+91 98765 43210</a></li>
+                <li><i class="fa fa-globe"></i> <a href="http://www.sknscoe.ac.in" target="_blank">www.sknscoe.ac.in</a></li>
+            </ul>
+        </div>
+        <div class="contact-form-card">
+            <h3>Send Us a Message</h3>
+            <form id="contactForm">
+                <!-- FIX: Added hidden input for CSRF token -->
+               <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> -->
+                <div class="form-group">
+                    <input type="text" id="contactName" name="name" placeholder=" " required/>
+                    <label for="contactName">Your Name</label>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="contactEmail" name="email" placeholder=" " required/>
+                    <label for="contactEmail">Your Email</label>
+                </div>
+                <div class="form-group">
+                    <textarea id="contactMessage" name="message" rows="4" placeholder=" " required></textarea>
+                    <label for="contactMessage">Your Message</label>
+                </div>
+                <button type="submit" class="contact-btn">
+                    <i class="fa fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div id="frfModal" class="modal-overlay" tabindex="-1" aria-modal="true" aria-hidden="true">
+    <div class="modal-content">
+        <button class="modal-close" id="frfModalClose" aria-label="Close">&times;</button>
+        <h2 class="modal-title">Feature Request Form</h2>
+        <form id="frfForm" method="post" th:action="@{/addFRF}" autocomplete="off">
+            <!-- FIX: Added hidden input for CSRF token -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <div class="modal-info-box suggestion">
+                <div class="modal-info-box__icon-wrapper">
+                    <i class="fa fa-thumbs-up"></i>
+                </div>
+                <p>We value your input! Your feedback helps us grow.</p>
+            </div>
+            <input type="hidden" name="id" id="frfId">
+            <div class="modal-group">
+                <label for="frfName">Name of Student</label>
+                <input type="text" id="frfName" name="name" required/>
+            </div>
+            <div class="modal-group">
+                <label for="frfEmail">Email ID</label>
+                <input type="email" id="frfEmail" name="email" required/>
+            </div>
+            <div class="modal-group">
+                <label for="frfCollege">College Name</label>
+                <input type="text" id="frfCollege" name="college" required/>
+            </div>
+            <div class="modal-group">
+                <label for="frfMessage">Your Message</label>
+                <textarea id="frfMessage" name="message" rows="3" required></textarea>
+            </div>
+            <div class="slider-submit" id="sliderSubmit">
+                <span class="slider-text">Slide to Submit</span>
+                <span class="slider-handle" tabindex="0">
+                    <i class="fa fa-cog"></i>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="authModal" class="modal-overlay" tabindex="-1" aria-modal="true" aria-hidden="true">
+    <div class="modal-content auth-modal-content">
+        <button class="modal-close" id="authModalClose" aria-label="Close">&times;</button>
+        <h2 class="modal-title">Login Required</h2>
+        <p class="auth-message">You need to be logged in to register for an event. Please log in or create an account to continue.</p>
+        <div class="auth-buttons">
+            <a th:href="@{/login}" class="auth-btn login-link">Login to Account</a>
+            <a th:href="@{/userRegForm}" class="auth-btn create-link">Create New Account</a>
+        </div>
+    </div>
+</div>
+<!-- Somewhere in your index.html, where you want the toast to appear -->
+<!-- The 'th:if' condition checks if the flash attribute 'frfSuccessMessage' exists in the model -->
+<div id="frfToast" class="frf-toast" th:if="${frfSuccessMessage}">
+    <!-- The 'th:text' sets the content of the toast to the message from the flash attribute -->
+    <span th:text="${frfSuccessMessage}"></span>
+</div>
+
+<footer class="footer">
+    <div class="footer-bg"></div>
+    <div class="footer-main">
+        <div class="footer-col footer-brand">
+            <div class="footer-logo">
+                <span class="footer-logo-icon"><i class="fa fa-wrench"></i></span>
+                <span class="footer-logo-text">MESA</span>
+            </div>
+            <p class="footer-mission">
+                Empowering the next generation of Mechanical Engineers<br>
+                through innovation and collaboration.
+            </p>
+            <div class="footer-social">
+                <a href="#" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fa fa-linkedin"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4 class="footer-title">Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 class="footer-title">Resources</h4>
+            <ul class="footer-links">
+                <li><a href="#">College Website</a></li>
+                <li><a href="#">University Portal</a></li>
+                <li><a href="#">Career Opportunities</a></li>
+                <li><a href="#">Student Projects</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2025 MESA SKNSCOE. All rights reserved.</span>
+        <span class="footer-dev">Designed, Developed &amp; Deployed by <a href="#">Sandesh Sudake</a></span>
+    </div>
+</footer>
+
+<button id="backToTopBtn" title="Back to Top" aria-label="Back to Top">&#8679;</button>
+
+<script th:src="@{/js/index.js}"></script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MESA - User Profile</title>
+    <link rel="stylesheet" th:href="@{/css/user.css}" />
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+</head>
+<body>
+<nav class="navbar">
+    <div class="brand">
+        <img th:src="@{/mesa-logo/MESA-Logo.jpg}" alt="Brand Logo" />
+        <span>MESA</span>
+    </div>
+    <div
+            class="hamburger"
+            id="hamburger"
+            aria-label="Toggle navigation"
+            aria-expanded="false"
+            aria-controls="navLinks"
+            tabindex="0"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <div class="nav-links" id="navLinks">
+        <a th:href="@{/}">Home</a>
+        <a href="#profile">Profile</a>
+        <a href="#events-registered">Events</a>
+        <form th:action="@{/logout}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<main class="main-content">
+    <section class="user-profile-section" id="profile" th:object="${loggedUser}">
+        <div class="user-profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar-container">
+                    <img src="https://placehold.co/120x120/0078d7/ffffff?text=U" alt="User Avatar" class="profile-avatar" />
+                </div>
+                <div class="profile-info">
+                    <h1 class="welcome-text" th:text="'Welcome, ' + *{userName} + '!'"></h1>
+                    <p class="warning-text">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        Your profile details are shown below. Please ensure they are accurate.
+                    </p>
+                </div>
+            </div>
+
+            <div class="profile-details-grid"
+                 th:data-user-fullname="*{userFullName}"
+                 th:data-user-class="*{userClass}"
+                 th:data-user-branch="*{userBranch}"
+                 th:data-user-college="*{userCollege}"
+                 th:data-user-email="*{userMail}"
+                 th:data-user-mobileno="*{userMobile}">
+
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fa fa-user"></i> Full Name</span>
+                    <span class="detail-value" id="userFullName" th:text="*{userFullName}"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fa fa-graduation-cap"></i> Class</span>
+                    <span class="detail-value" id="userClass" th:text="*{userClass}"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fa fa-code-fork"></i> Branch</span>
+                    <span class="detail-value" id="userBranch" th:text="*{userBranch}"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fa fa-building"></i> College</span>
+                    <span class="detail-value" id="userCollege" th:text="*{userCollege}"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fa fa-envelope"></i> Email</span>
+                    <span class="detail-value" id="userEmail" th:text="*{userMail}"></span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fa fa-phone"></i> Mobile No.</span>
+                    <span class="detail-value" id="userMobileNo" th:text="*{userMobile}"></span>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button id="editProfileBtn" class="edit-profile-btn">
+                    <i class="fa fa-pencil"></i> Edit Profile
+                </button>
+            </div>
+        </div>
+    </section>
+    <div class="section-divider"></div>
+
+    <section class="registered-events-section" id="events-registered">
+        <h2 class="events-header-title">Registered Events</h2>
+        <div class="table-container">
+            <table class="events-table">
+                <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Reg. Time & Date</th>
+                    <th>Event Time & Date</th>
+                    <th>Event Location</th>
+                    <th>Certificate</th>
+                </tr>
+                </thead>
+                <tbody id="eventsTableBody">
+                <tr th:if="${#lists.isEmpty(registeredEventsData)}">
+                    <td colspan="5" style="text-align: center; padding: 2rem;">You have not registered for any events yet.</td>
+                </tr>
+                <tr class="event-row" th:each="data : ${registeredEventsData}">
+                    <td data-label="Event Name" th:text="${data.event.eventName}"></td>
+                    <td data-label="Reg. Date" th:text="${data.registration.regDateTime}"></td>
+                    <td data-label="Event Date" th:text="${data.event.eventDay + ' ' + data.event.eventMonth + ', ' + data.event.eventTime}"></td>
+                    <td data-label="Location" th:text="${data.event.eventLocation}"></td>
+                    <td data-label="Certificate" class="certificate-cell">
+                        <span class="badge pending">Pending</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="events-section" id="events-all">
+        <div class="events-header">
+            <h2 class="events-section-title">
+                <span class="events-accent"></span>
+                Explore Our Events
+            </h2>
+            <div class="event-filters">
+                <button class="event-chip active" data-filter="all">All</button>
+                <button class="event-chip" data-filter="upcoming">Upcoming</button>
+                <button class="event-chip" data-filter="past">Past</button>
+                <button class="event-chip" data-filter="workshop">Workshops</button>
+                <button class="event-chip" data-filter="fest">Fests</button>
+            </div>
+        </div>
+        <div class="events-carousel" id="eventsCarousel">
+            <div class="event-card" th:each="event : ${events}" th:data-id="${event.eventId}" th:data-reg-type="${event.eventType}">
+                <div class="event-date">
+                    <span class="event-day" th:text="${event.eventDay}"></span>
+                    <span class="event-month" th:text="${event.eventMonth}"></span>
+                </div>
+                <div class="event-info">
+                    <h3 th:text="${event.eventName}"></h3>
+                    <div class="event-meta">
+                        <span><i class="fa fa-clock-o"></i> <span th:text="${event.eventTime}"></span></span>
+                        <span><i class="fa fa-map-marker"></i> <span th:text="${event.eventLocation}"></span></span>
+                        <img th:src="${event.qrImgURL}" class="event-qr-code" hidden height="450px">
+                    </div>
+                    <p th:text="${event.eventDesc}"></p>
+                    <a th:if="${event.eventType == 'form'}" class="event-register" href="#" th:data-id="${event.eventId}">Register</a>
+                    <a th:if="${event.eventType == 'link'}" class="event-register" th:href="${event.eventRegLink}" target="_blank">Register</a>
+                </div>
+                <span class="event-badge new">New</span>
+            </div>
+        </div>
+        <button class="carousel-btn left" id="carouselLeft" aria-label="Scroll left">&#10094;</button>
+        <button class="carousel-btn right" id="carouselRight" aria-label="Scroll right">&#10095;</button>
+    </section>
+</main>
+
+<div id="eventRegisterModal" class="modal-overlay" tabindex="-1" aria-modal="true" aria-hidden="true">
+    <div class="modal-content">
+        <button class="modal-close" id="eventRegisterModalClose" aria-label="Close">&times;</button>
+        <h2 class="modal-title">Event Registration</h2>
+        <form id="eventRegisterForm" method="post" th:action="@{/registerEvent}" autocomplete="off" enctype="multipart/form-data">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <div class="modal-info-box">
+                <i class="fa fa-info-circle"></i>
+                <p>Please verify your details. You can edit them in your profile if they are incorrect.</p>
+            </div>
+            <input type="hidden" name="eventId" id="modalEventId" />
+            <input type="hidden" name="regID" id="registrationId" />
+            <div class="modal-group">
+                <label for="eventName">Name of the Event</label>
+                <input type="text" id="eventName" name="eventName" readonly />
+            </div>
+            <div class="modal-group">
+                <label for="studentName">Name of Student</label>
+                <input type="text" id="studentName" name="studentName" required />
+            </div>
+            <div class="modal-group">
+                <label for="studentClass">Class</label>
+                <input type="text" id="studentClass" name="studentClass" required />
+            </div>
+            <div class="modal-group">
+                <label for="branch">Branch</label>
+                <input type="text" id="branch" name="branch" required />
+            </div>
+            <div class="modal-group">
+                <label for="collegeName">College Name</label>
+                <input type="text" id="collegeName" name="collegeName" required />
+            </div>
+            <div class="modal-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required />
+            </div>
+            <div class="modal-group">
+                <label for="mobileNo">Mobile Number</label>
+                <input type="tel" id="mobileNo" name="mobileNo" required pattern="[0-9]{10}" />
+            </div>
+            <div class="modal-group">
+                <label>Scan to Pay</label>
+                <img src="" alt="Scan to Pay QR Code" style="width:150px; height:150px;" id="qrCodeImageInModal"/>
+            </div>
+            <div class="modal-group">
+                <label for="utrNumber">Enter UTR Number</label>
+                <input type="text" id="utrNumber" name="utrNumber" required />
+            </div>
+            <div class="modal-group">
+                <label for="paymentProof">Upload Payment Proof</label>
+                <input type="file" id="paymentProof" name="paymentProof" accept="image/*,application/pdf" required />
+            </div>
+            <button type="submit" class="submit-btn">Register for Event</button>
+        </form>
+    </div>
+</div>
+
+<div id="eventLinkModal" class="modal-overlay" tabindex="-1" aria-modal="true" aria-hidden="true">
+    <div class="modal-content text-center">
+        <button class="modal-close" id="eventLinkModalClose" aria-label="Close">&times;</button>
+        <h2 class="modal-title">Event Registration</h2>
+        <p>You will be redirected to an external Google Form for registration.</p>
+        <a href="#" id="googleFormLink" target="_blank" class="submit-btn full-width">
+            Go to Registration Form
+        </a>
+    </div>
+</div>
+
+<div id="editProfileModal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" id="editProfileModalClose" aria-label="Close modal">&times;</button>
+        <h2 class="modal-title">Edit Profile</h2>
+        <form id="editProfileForm" method="post" th:action="@{/updateProfile}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <div class="alert alert-info" role="alert">
+                This is a info alert—check it out!
+            </div>
+            <input type="hidden" name="username" id="editUsername" />
+            <div class="modal-group">
+                <label for="editFullName">Full Name</label>
+                <input type="text" id="editFullName" name="fullName" required />
+            </div>
+            <div class="modal-group">
+                <label for="editClass">Class</label>
+                <input type="text" id="editClass" name="studentClass" required />
+            </div>
+            <div class="modal-group">
+                <label for="editBranch">Branch</label>
+                <input type="text" id="editBranch" name="branch" required />
+            </div>
+            <div class="modal-group">
+                <label for="editCollege">College</label>
+                <input type="text" id="editCollege" name="college" required />
+            </div>
+            <div class="modal-group">
+                <label for="editEmail">Email</label>
+                <input type="email" id="editEmail" name="email" required />
+            </div>
+            <div class="modal-group">
+                <label for="editMobileNo">Mobile Number</label>
+                <input type="tel" id="editMobileNo" name="mobileNo" required pattern="[0-9]{10}" />
+            </div>
+            <button type="submit" class="submit-btn">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<div id="registerToast" class="register-toast">
+    <div class="toast-progress"></div>
+    <span class="toast-text"></span>
+</div>
+
+<footer class="footer">
+    <div class="footer-main">
+        <div class="footer-col footer-brand">
+            <div class="footer-logo">
+                <span class="footer-logo-icon"><i class="fa fa-wrench"></i></span>
+                <span class="footer-logo-text">MESA</span>
+            </div>
+            <p class="footer-mission">
+                Empowering the next generation of Mechanical Engineers<br>
+                through innovation and collaboration.
+            </p>
+            <div class="footer-social">
+                <a href="#" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fa fa-linkedin"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4 class="footer-title">Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 class="footer-title">Resources</h4>
+            <ul class="footer-links">
+                <li><a href="#">College Website</a></li>
+                <li><a href="#">University Portal</a></li>
+                <li><a href="#">Career Opportunities</a></li>
+                <li><a href="#">Student Projects</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2025 MESA SKNSCOE. All rights reserved.</span>
+        <span class="footer-dev">Designed, Developed & Deployed by <a href="#">Sandesh Sudake</a></span>
+    </div>
+</footer>
+
+<button id="backToTopBtn" title="Back to Top" aria-label="Back to Top">&#8679;</button>
+
+<script th:src="@{/js/user.js}"></script>
+</body>
+</html>
