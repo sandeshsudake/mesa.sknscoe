@@ -23,65 +23,99 @@ navLinks.querySelectorAll('a').forEach(link => {
         hamburger.setAttribute('aria-expanded', 'false');
     });
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const slider = document.getElementById('slider');
+    const slidesContainer = document.getElementById('slidesContainer');
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const navContainer = document.getElementById('sliderNav');
 
-// Image Slider
-const slides = document.querySelectorAll('.slide');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-let currentSlide = 0;
-let slideInterval = setInterval(nextSlide, 3500);
+    if (!slider || slides.length === 0) return;
 
-function showSlide(index) {
-    slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
+    let currentSlide = 0;
+    let slideInterval;
+
+    // --- Create Navigation Dots ---
+    slides.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.classList.add('nav-dot');
+        dot.addEventListener('click', () => {
+            goToSlide(i);
+            resetInterval();
+        });
+        navContainer.appendChild(dot);
     });
-}
 
-function nextSlide() {
-    currentSlide = (currentSlide + 1) % slides.length;
-    showSlide(currentSlide);
-}
+    const navDots = document.querySelectorAll('.nav-dot');
 
-function prevSlide() {
-    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-    showSlide(currentSlide);
-}
+    // --- Core Slide Function ---
+    function goToSlide(slideIndex) {
+        currentSlide = slideIndex;
+        // IMPROVED: Move the entire container instead of showing/hiding slides
+        slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
 
-nextBtn.addEventListener('click', () => {
-    nextSlide();
-    resetInterval();
-});
-prevBtn.addEventListener('click', () => {
-    prevSlide();
-    resetInterval();
-});
+        // Update active dot
+        navDots.forEach(dot => dot.classList.remove('active'));
+        navDots[currentSlide].classList.add('active');
+    }
 
-function resetInterval() {
-    clearInterval(slideInterval);
-    slideInterval = setInterval(nextSlide, 3500);
-}
+    function nextSlide() {
+        const nextIndex = (currentSlide + 1) % slides.length;
+        goToSlide(nextIndex);
+    }
 
-// Optional: swipe support for mobile
-const slider = document.getElementById('slider');
-let startX = 0;
-if (slider) {
+    function prevSlide() {
+        const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+        goToSlide(prevIndex);
+    }
+
+    // --- Auto-play Interval ---
+    function startInterval() {
+        slideInterval = setInterval(nextSlide, 3500);
+    }
+
+    function resetInterval() {
+        clearInterval(slideInterval);
+        startInterval();
+    }
+
+    // --- Event Listeners ---
+    nextBtn.addEventListener('click', () => {
+        nextSlide();
+        resetInterval();
+    });
+
+    prevBtn.addEventListener('click', () => {
+        prevSlide();
+        resetInterval();
+    });
+
+    // NEW: Pause auto-play on hover
+    slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+    slider.addEventListener('mouseleave', () => resetInterval());
+
+    // Swipe support for mobile (from your original code)
+    let startX = 0;
     slider.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
-    });
+        clearInterval(slideInterval); // Pause on touch
+    }, { passive: true });
+
     slider.addEventListener('touchend', (e) => {
         let endX = e.changedTouches[0].clientX;
         if (endX - startX > 50) {
             prevSlide();
-            resetInterval();
         } else if (startX - endX > 50) {
             nextSlide();
-            resetInterval();
         }
+        resetInterval(); // Resume after swipe
     });
-}
 
-// Initialize slider
-showSlide(currentSlide);
+    // --- Initialize Slider ---
+    goToSlide(0); // Set initial state
+    startInterval(); // Start auto-play
+});
 
 // Animated Counter for About Section
 function animateCounter(element, target, duration = 1500) {

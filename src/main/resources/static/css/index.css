@@ -83,50 +83,85 @@ body {
 .slider {
     position: relative;
     width: 100%;
-    margin: 2rem 0 0 0; /* Remove auto horizontal margins */
-    overflow: hidden;
-    border-radius: 0; /* Remove border-radius for full width, or set as needed */
-    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-    background: #fff;
+    margin: 2rem 0 0 0;
+    overflow: hidden; /* Crucial: Hides the other slides */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+
 .slides {
     display: flex;
-    transition: transform 0.5s ease;
+    width: 100%;
+    /* UPDATED: Simple and smooth transition */
+    transition: transform 0.5s ease-in-out;
 }
+
 .slide {
     min-width: 100%;
     width: 100%;
-    display: none;
     object-fit: cover;
     height: auto;
-    /* Remove or comment out 'height: 350px;' */
 }
-.slide.active {
-    display: block;
-}
+
 .slider-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255,255,255,0.7);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px);
     border: none;
-    font-size: 2rem;
-    color: #222;
-    padding: 0.3em 0.7em;
+    font-size: 1.75rem;
+    color: #333;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 2;
-    transition: background 0.2s;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s;
 }
+
 .slider-btn:hover {
-    background: #0078d7;
+    background-color: #0078d7;
     color: #fff;
 }
+
 .slider-btn.prev {
     left: 16px;
 }
+
 .slider-btn.next {
     right: 16px;
+}
+
+.slider-nav {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.nav-dot:hover {
+    background-color: #fff;
+}
+
+.nav-dot.active {
+    background-color: #0078d7;
+    transform: scale(1.2);
 }
 .about-section {
     width: 100%;

@@ -5,7 +5,8 @@
    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!--<meta name="viewport" content="width=1024"> -->
 
-    <title>Mesa-Home Page</title>
+    <title>Mesa-Home</title>
+    <link rel="icon" type="image/png" th:href="@{/mesa-logo/MESA-Logo.jpg}"/>
     <link rel="stylesheet" th:href="@{/css/index.css}"/>
     <link
             rel="stylesheet"
@@ -41,27 +42,17 @@
         <a th:href="@{/login}" class="login-btn">Login</a>
     </div>
 </nav>
-
 <div class="slider" id="slider">
-    <div class="slides">
-        <img
-                th:src="@{/slider-img/InaugurationofDepartmentEvents.png}"
-                alt="Slide 1"
-                class="slide active"
-        />
-        <img th:src="@{/slider-img/Spectrum.png}" alt="Slide 2" class="slide"/>
-        <img th:src="@{/slider-img/speech&resumewriting.png}" alt="Slide 3" class="slide"/>
+    <div class="slides" id="slidesContainer">
+        <img th:src="@{/slider-img/InaugurationofDepartmentEvents.png}" alt="Slide 1" class="slide" />
+        <img th:src="@{/slider-img/Spectrum.png}" alt="Slide 2" class="slide" />
+        <img th:src="@{/slider-img/speech&resumewriting.png}" alt="Slide 3" class="slide" />
     </div>
-    <button
-            class="slider-btn prev"
-            id="prevBtn"
-            aria-label="Previous slide"
-    >&#10094;</button>
-    <button
-            class="slider-btn next"
-            id="nextBtn"
-            aria-label="Next slide"
-    >&#10095;</button>
+
+    <button class="slider-btn prev" id="prevBtn" aria-label="Previous slide">&#10094;</button>
+    <button class="slider-btn next" id="nextBtn" aria-label="Next slide">&#10095;</button>
+
+    <div class="slider-nav" id="sliderNav"></div>
 </div>
 
 <div class="section-divider"></div>
