@@ -17,31 +17,31 @@ public class StaticResourceConfig implements WebMvcConfigurer {
         registry.addResourceHandler(
                         "/mesa-logo/**",
                         "/slider-img/**",
+                        "/mesa-team/**", // <-- CRITICAL FIX: Added this resource handler
                         "/gallery*.jpg",
                         "/team*.jpg",
                         "/speaker*.jpg",
                         "/outgoing*.jpg",
-                        "/images/**") // Ensure all image paths are covered
+                        "/images/**")
                 .addResourceLocations(
                         "classpath:/static/mesa-logo/",
                         "classpath:/static/slider-img/",
+                        "classpath:/static/mesa-team/", // <-- CRITICAL FIX: Added this resource location
                         "classpath:/static/", // For images directly in static
-                        "classpath:/static/images/") // For images in a dedicated /static/images folder
+                        "classpath:/static/images/")
                 .setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS).cachePublic().noTransform());
 
 
         // CSS and JS: No cache (always load fresh after deploy)
-        // This will force the browser to re-download these files on every visit.
         registry.addResourceHandler("/css/**", "/js/**")
                 .addResourceLocations("classpath:/static/css/", "classpath:/static/js/")
-                .setCacheControl(CacheControl.noStore()); // Changed to noStore()
+                .setCacheControl(CacheControl.noStore());
 
 
         // HTML: No cache (always load fresh)
-        // This will force the browser to re-download HTML files on every visit.
-        registry.addResourceHandler("/*.html", "/") // Also apply to the root path
+        registry.addResourceHandler("/*.html", "/")
                 .addResourceLocations("classpath:/static/")
-                .setCacheControl(CacheControl.noStore()); // Changed to noStore()
+                .setCacheControl(CacheControl.noStore());
 
         // Favicon and other root-level static files: Cache for a moderate period
         registry.addResourceHandler("/favicon.ico")

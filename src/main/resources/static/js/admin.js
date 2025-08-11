@@ -225,3 +225,30 @@ if (deleteConfirmBtn && deleteCancelBtn && deleteConfirmModal) {
 // The browser will handle the form submission.
 
 
+const logoutButton = document.querySelector('.logout-btn-as-link');
+const logoutForm = document.getElementById('logoutForm');
+
+ if (logoutButton && logoutForm) {
+        logoutButton.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be logged out from your session.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, log me out!',
+                cancelButtonText: 'No, stay logged in'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    logoutForm.submit();
+                }
+            });
+        });
+ }
+
+
+
+

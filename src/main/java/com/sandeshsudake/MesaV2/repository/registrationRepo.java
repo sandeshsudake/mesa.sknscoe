@@ -15,4 +15,5 @@ public interface registrationRepo extends MongoRepository<Registration,String> {
     List<Registration> findByEventId(String eventId);
 
 
+    Registration findByEmailAndEventId(String userMail, String eventId);
 }

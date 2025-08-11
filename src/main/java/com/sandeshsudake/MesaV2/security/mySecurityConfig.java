@@ -33,6 +33,7 @@ public class mySecurityConfig {
 
                                 // Image folders
                                 "/mesa-logo/**", "/slider-img/**",
+                                "/mesa-team/**",   // <-- CRITICAL FIX: Added team images
 
                                 // Health Check & general forms
                                 "/healthCheck", "/addFRF"

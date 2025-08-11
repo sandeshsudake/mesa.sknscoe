@@ -192,17 +192,17 @@ function attachEventRegisterListeners() {
     });
 }
 
-if (eventRegisterForm) {
-    eventRegisterForm.addEventListener('submit', function(e) {
-        const toast = document.getElementById('registerToast');
-        const toastText = toast?.querySelector('.toast-text');
-        if (toast && toastText) {
-            toastText.textContent = "🎉 Event registration successful! Check your email for details.";
-            toast.classList.add('active');
-            setTimeout(() => toast.classList.remove('active'), 3500);
-        }
-    });
-}
+//if (eventRegisterForm) {
+//    eventRegisterForm.addEventListener('submit', function(e) {
+//        const toast = document.getElementById('registerToast');
+//        const toastText = toast?.querySelector('.toast-text');
+//        if (toast && toastText) {
+//            toastText.textContent = "🎉 Event registration successful! Check your email for details.";
+//            toast.classList.add('active');
+//            setTimeout(() => toast.classList.remove('active'), 3500);
+//        }
+//    });
+//}
 
 function attachEditProfileModalListeners() {
     if (editProfileBtn) {
@@ -222,4 +222,59 @@ function attachEditProfileModalListeners() {
             openModal(editProfileModal);
         });
     }
+}
+
+// Query all logout buttons with classes 'logout-btn' or 'logout-btn-as-link'
+const logoutButtons = document.querySelectorAll('.logout-btn, .logout-btn-as-link');
+
+ logoutButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent immediate form submit
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be logged out from your session.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, log me out!',
+                cancelButtonText: 'No, stay logged in'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the closest form enclosing the button
+                    const form = e.target.closest('form');
+                    if (form) {
+                        form.submit();
+                    }
+                }
+            });
+        });
+ });
+
+
+
+
+// Add this inside your attachEventRegisterListeners function
+// or in a new function called on DOMContentLoaded
+const registerEventForm = document.getElementById('eventRegisterForm');
+const registerSubmitBtn = document.getElementById('registerEventSubmitBtn');
+const registerBtnText = registerSubmitBtn ? registerSubmitBtn.querySelector('.button-text') : null;
+const registerBtnSpinner = registerSubmitBtn ? registerSubmitBtn.querySelector('.spinner') : null;
+
+if (registerEventForm && registerSubmitBtn && registerBtnText && registerBtnSpinner) {
+    registerEventForm.addEventListener('submit', function(e) {
+        // Prevent default submission initially if you have client-side validation
+        // e.preventDefault(); // Uncomment if you need to do client-side validation before showing loading
+
+        // Add loading state
+        registerSubmitBtn.classList.add('loading');
+        registerSubmitBtn.disabled = true; // Disable the button to prevent multiple clicks
+        registerBtnText.classList.add('hidden'); // Hide text
+        registerBtnSpinner.classList.remove('hidden'); // Show spinner
+
+        // Since the form submits and causes a page reload,
+        // the state will naturally reset on the next page load.
+        // If you were doing AJAX, you would reset the state in the AJAX callback.
+    });
 }

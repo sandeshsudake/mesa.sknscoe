@@ -152,25 +152,57 @@ public class userController {
 
     @PostMapping("/registerEvent")
     public String registerEvent(Registration registration,
-                                @RequestParam("paymentProof") MultipartFile file) throws IOException {
+                                @RequestParam("paymentProof") MultipartFile file,
+                                @CurrentSecurityContext(expression = "authentication?.name") String currentUsername, // Securely get username
+                                RedirectAttributes redirectAttributes) throws IOException {
 
+        // 1. Get the logged-in user's email securely
+        user loggedInUser = userRepo.findByUserName(currentUsername);
+        if (loggedInUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "User not found. Please log in again.");
+            return "redirect:/user";
+        }
 
+        // 2. Check if the user is already registered for this event
+        // Assuming your Registration entity has fields like 'email' and 'eventId'
+        // And your RegistrationRepo has a method like findByEmailAndEventId
+        Registration existingRegistration = registrationRepo.findByEmailAndEventId(loggedInUser.getUserMail(), registration.getEventId());
+
+        if (existingRegistration != null) {
+            // User is already registered for this event
+            redirectAttributes.addFlashAttribute("errorMessage", "You are already registered for this event!");
+            return "redirect:/user"; // Redirect back to user page
+        }
+
+        // 3. Proceed with registration if not already registered
         // Manually set a unique ID if it's not already present
         if (registration.getRegID() == null || registration.getRegID().isEmpty()) {
             registration.setRegID(UUID.randomUUID().toString());
         }
 
-        // The 'file' variable will now correctly contain the uploaded file.
+        // Handle file upload
         if (file != null && !file.isEmpty()) {
-            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-            registration.setPaymentProofURL((String) uploadResult.get("secure_url"));
+            try {
+                Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+                registration.setPaymentProofURL((String) uploadResult.get("secure_url"));
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Failed to upload payment proof. Please try again.");
+                return "redirect:/user";
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Payment proof is required.");
+            return "redirect:/user";
         }
 
         // Set the current date and time for the registration
-        registration.setRegDateTime(LocalDateTime.now()); // <-- Added this line
+        registration.setRegDateTime(LocalDateTime.now());
+
+        // Set the user's email from the securely obtained loggedInUser object
+        registration.setEmail(loggedInUser.getUserMail()); // Ensure registration object has email field
 
         registrationRepo.save(registration);
 
+        redirectAttributes.addFlashAttribute("successMessage", "Event registration successful! Check your email for details.");
         return "redirect:/user";
     }
 

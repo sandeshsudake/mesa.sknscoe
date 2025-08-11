@@ -43,6 +43,8 @@
 </nav>
 
 <main class="main-content">
+
+
     <section class="user-profile-section" id="profile" th:object="${loggedUser}">
         <div class="user-profile-card">
             <div class="profile-header">
@@ -182,6 +184,14 @@
                 <i class="fa fa-info-circle"></i>
                 <p>Please verify your details. You can edit them in your profile if they are incorrect.</p>
             </div>
+
+            <!-- Professional Error Message Display -->
+            <div th:if="${errorMessage}" class="alert alert-danger" id="eventRegisterErrorMessage">
+                <i class="fa fa-exclamation-circle"></i>
+                <span th:text="${errorMessage}"></span>
+            </div>
+
+
             <input type="hidden" name="eventId" id="modalEventId" />
             <input type="hidden" name="regID" id="registrationId" />
             <div class="modal-group">
@@ -224,7 +234,10 @@
                 <label for="paymentProof">Upload Payment Proof</label>
                 <input type="file" id="paymentProof" name="paymentProof" accept="image/*,application/pdf" required />
             </div>
-            <button type="submit" class="submit-btn">Register for Event</button>
+            <button type="submit" class="submit-btn" id="registerEventSubmitBtn">
+                <span class="button-text">Register for Event</span>
+                <span class="spinner hidden"></span>
+            </button>
         </form>
     </div>
 </div>
@@ -343,35 +356,78 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    // Query all logout buttons with classes 'logout-btn' or 'logout-btn-as-link'
-    const logoutButtons = document.querySelectorAll('.logout-btn, .logout-btn-as-link');
+<script th:inline="javascript">
 
-    logoutButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent immediate form submit
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You will be logged out from your session.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, log me out!',
-                cancelButtonText: 'No, stay logged in'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Submit the closest form enclosing the button
-                    const form = e.target.closest('form');
-                    if (form) {
-                        form.submit();
-                    }
-                }
-            });
-        });
-    });
+
+
+    // Safely get flash attributes from the model
+       const loginSuccess = /*[[${loginSuccess}]]*/ false;
+       const loginMessage = /*[[${loginMessage}]]*/ '';
+
+       document.addEventListener('DOMContentLoaded', function() {
+           if (loginSuccess) {
+               // Your provided SweetAlert2 mixin for toast notifications
+               const Toast = Swal.mixin({
+                   toast: true,
+                   position: "top-end",
+                   showConfirmButton: false,
+                   timer: 3000,
+                   timerProgressBar: true,
+                   didOpen: (toast) => {
+                       toast.onmouseenter = Swal.stopTimer;
+                       toast.onmouseleave = Swal.resumeTimer;
+                   }
+               });
+
+               // Fire the toast with the success icon and dynamic message
+               Toast.fire({
+                   icon: "success",
+                   title: loginMessage // Use the dynamic message from the controller
+               });
+           }
+       });
+
+
 </script>
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Safely get flash attributes from the model
+    const errorMessage = /*[[${errorMessage}]]*/ null;
+    const successMessage = /*[[${successMessage}]]*/ null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // SweetAlert2 Mixin for toast notifications
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+
+        if (errorMessage) {
+            Toast.fire({
+                icon: "error", // Use error icon for error messages
+                title: errorMessage
+            });
+        } else if (successMessage) {
+            Toast.fire({
+                icon: "success", // Use success icon for success messages
+                title: successMessage
+            });
+        }
+    });
+    /*]]>*/
+</script>
+
+
 
 <script th:src="@{/js/user.js}"></script>
 </body>

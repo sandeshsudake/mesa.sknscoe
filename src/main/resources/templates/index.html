@@ -2,7 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!--<meta name="viewport" content="width=1024"> -->
+
     <title>Mesa-Home Page</title>
     <link rel="stylesheet" th:href="@{/css/index.css}"/>
     <link
@@ -208,7 +210,7 @@
     <div class="team-grid">
         <div class="team-card">
             <div class="team-img">
-                <img src="team1.jpg" alt="Dr.S.S.Kulkarni"/>
+                <img th:src="@{/mesa-team/MECH-HOD.jpg}" alt="Dr.S.S.Kulkarni"/>
             </div>
             <h3>Dr.S.S.Kulkarni</h3>
             <div class="team-role hod">HOD</div>
@@ -219,7 +221,7 @@
         </div>
         <div class="team-card">
             <div class="team-img">
-                <img src="team2.jpg" alt="Prof.H.S.Deshpande"/>
+                <img th:src="@{/mesa-team/HSD.webp}" alt="Prof.H.S.Deshpande"/>
             </div>
             <h3>Prof.H.S.Deshpande</h3>
             <div class="team-role advisor">Faculty Advisor</div>
@@ -230,7 +232,7 @@
         </div>
         <div class="team-card">
             <div class="team-img">
-                <img src="team3.jpg" alt="Mr.Saurabh Dighe"/>
+                <img th:src="@{/mesa-team/user.png}" alt="Mr.Saurabh Dighe"/>
             </div>
             <h3>Mr.Saurabh Dighe</h3>
             <div class="team-role president">President</div>
@@ -241,7 +243,7 @@
         </div>
         <div class="team-card">
             <div class="team-img">
-                <img src="team4.jpg" alt="Miss.Riya Antrolikar"/>
+                <img th:src="@{/mesa-team/user.png}" alt="Miss.Riya Antrolikar"/>
             </div>
             <h3>Miss.Riya Antrolikar</h3>
             <div class="team-role vice">Vice-President</div>
@@ -252,7 +254,7 @@
         </div>
         <div class="team-card">
             <div class="team-img">
-                <img src="team5.jpg" alt="Mr.Sohel Khan"/>
+                <img th:src="@{/mesa-team/user.png}" alt="Mr.Sohel Khan"/>
             </div>
             <h3>Mr.Sohel Khan</h3>
             <div class="team-role event">Event Manager</div>
@@ -264,7 +266,7 @@
         <!-- Missing Team Members Added Below -->
         <div class="team-card">
             <div class="team-img">
-                <img src="team6.jpg" alt="Mr.Tejas Pawar"/>
+                <img th:src="@{/mesa-team/user.png}" alt="Mr.Tejas Pawar"/>
             </div>
             <h3>Mr.Tejas Pawar</h3>
             <div class="team-role asst-event">Asst. Event Manager</div>
@@ -274,7 +276,7 @@
         </div>
         <div class="team-card">
             <div class="team-img">
-                <img src="team7.jpg" alt="Miss.Janhvi Kasegaonkar"/>
+                <img th:src="@{/mesa-team/user.png}" alt="Miss.Janhvi Kasegaonkar"/>
             </div>
             <h3>Miss.Janhvi Kasegaonkar</h3>
             <div class="team-role secretary">Secretary</div>
@@ -284,7 +286,7 @@
         </div>
         <div class="team-card">
             <div class="team-img">
-                <img src="team8.jpg" alt="Mr.Swapnil Madane"/>
+                <img th:src="@{/mesa-team/user.png}" alt="Mr.Swapnil Madane"/>
             </div>
             <h3>Mr.Swapnil Madane</h3>
             <div class="team-role joint-secretary">Joint Secretary</div>
@@ -294,7 +296,7 @@
         </div>
         <div class="team-card">
             <div class="team-img">
-                <img src="team9.jpg" alt="Mr.Vaibhav Mane"/>
+                <img th:src="@{/mesa-team/user.png}" alt="Mr.Vaibhav Mane"/>
             </div>
             <h3>Mr.Vaibhav Mane</h3>
             <div class="team-role treasurer">Treasurer</div>
@@ -304,7 +306,7 @@
         </div>
         <div class="team-card">
             <div class="team-img">
-                <img src="team10.jpg" alt="Miss.Priya Bagrode"/>
+                <img th:src="@{/mesa-team/user.png}" alt="Miss.Priya Bagrode"/>
             </div>
             <h3>Miss.Priya Bagrode</h3>
             <div class="team-role ladies-rep">Ladies Representative</div>
@@ -314,7 +316,7 @@
         </div>
         <div class="team-card">
             <div class="team-img">
-                <img src="team11.jpg" alt="Mr.Om Tathe"/>
+                <img th:src="@{/mesa-team/user.png}" alt="Mr.Om Tathe"/>
             </div>
             <h3>Mr.Om Tathe</h3>
             <div class="team-role treasurer">Treasurer</div>

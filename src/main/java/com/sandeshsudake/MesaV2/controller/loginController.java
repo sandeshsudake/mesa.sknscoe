@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class loginController {
@@ -24,18 +25,22 @@ public class loginController {
         return "login";
     }
 
-    @GetMapping("/logicsuccess/")
-    public String loginSuccess(HttpServletRequest request){
 
-        // FIX: Check for the more specific role first
+    @GetMapping("/logicsuccess/")
+    public String loginSuccess(HttpServletRequest request, RedirectAttributes redirectAttributes){ // Add RedirectAttributes
+
         if (request.isUserInRole("ROLE_ADMIN")){
-            return "redirect:/admin";
+            redirectAttributes.addFlashAttribute("loginSuccess", true); // Pass login success flag
+            redirectAttributes.addFlashAttribute("loginMessage", "Welcome back, Admin!"); // Pass custom message
+            return "redirect:/admin"; // Redirect to admin dashboard
         }
         else if (request.isUserInRole("ROLE_USER")){
-            return "redirect:/user";
+            redirectAttributes.addFlashAttribute("loginSuccess", true); // Pass login success flag
+            redirectAttributes.addFlashAttribute("loginMessage", "Welcome back!"); // Pass custom message
+            return "redirect:/user"; // Redirect to user dashboard
         }
 
-        // This should not happen in normal circumstances
+        // Fallback in case roles are not matched (should ideally not happen)
         return "redirect:/";
     }
 }
