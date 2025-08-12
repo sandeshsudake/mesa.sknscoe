@@ -1,29 +1,33 @@
-const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('navLinks');
-
-function toggleMenu() {
-    navLinks.classList.toggle('open');
-    hamburger.setAttribute('aria-expanded', navLinks.classList.contains('open'));
-}
-
-hamburger.addEventListener('click', toggleMenu);
-
-// Keyboard accessibility for hamburger
-hamburger.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-        toggleMenu();
-        e.preventDefault(); // Prevent scrolling when space is pressed
-    }
-});
-
-// Optional: close menu when a link is clicked (mobile UX)
-navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
-    });
-});
 document.addEventListener('DOMContentLoaded', () => {
+
+    // --- NAVBAR / HAMBURGER MENU ---
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+
+    if (hamburger && navLinks) {
+        function toggleMenu() {
+            navLinks.classList.toggle('open');
+            hamburger.setAttribute('aria-expanded', navLinks.classList.contains('open'));
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        hamburger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                toggleMenu();
+                e.preventDefault();
+            }
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinks.classList.contains('open')) {
+                    toggleMenu();
+                }
+            });
+        });
+    }
+
+    // --- IMAGE SLIDER ---
     const slider = document.getElementById('slider');
     const slidesContainer = document.getElementById('slidesContainer');
     const slides = document.querySelectorAll('.slide');
@@ -31,398 +35,242 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('nextBtn');
     const navContainer = document.getElementById('sliderNav');
 
-    if (!slider || slides.length === 0) return;
+    if (slider && slides.length > 0) {
+        let currentSlide = 0;
+        let slideInterval;
 
-    let currentSlide = 0;
-    let slideInterval;
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('nav-dot');
+            dot.addEventListener('click', () => {
+                goToSlide(i);
+                resetInterval();
+            });
+            navContainer.appendChild(dot);
+        });
 
-    // --- Create Navigation Dots ---
-    slides.forEach((_, i) => {
-        const dot = document.createElement('div');
-        dot.classList.add('nav-dot');
-        dot.addEventListener('click', () => {
-            goToSlide(i);
+        const navDots = document.querySelectorAll('.nav-dot');
+
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            navDots.forEach(dot => dot.classList.remove('active'));
+            navDots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            goToSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            goToSlide(currentSlide);
+        }
+
+        function startInterval() {
+            slideInterval = setInterval(nextSlide, 3500);
+        }
+
+        function resetInterval() {
+            clearInterval(slideInterval);
+            startInterval();
+        }
+
+        nextBtn.addEventListener('click', () => { nextSlide(); resetInterval(); });
+        prevBtn.addEventListener('click', () => { prevSlide(); resetInterval(); });
+        slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+        slider.addEventListener('mouseleave', resetInterval);
+
+        let startX = 0;
+        slider.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; clearInterval(slideInterval); }, { passive: true });
+        slider.addEventListener('touchend', (e) => {
+            let endX = e.changedTouches[0].clientX;
+            if (endX - startX > 50) prevSlide();
+            else if (startX - endX > 50) nextSlide();
             resetInterval();
         });
-        navContainer.appendChild(dot);
-    });
 
-    const navDots = document.querySelectorAll('.nav-dot');
-
-    // --- Core Slide Function ---
-    function goToSlide(slideIndex) {
-        currentSlide = slideIndex;
-        // IMPROVED: Move the entire container instead of showing/hiding slides
-        slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-        // Update active dot
-        navDots.forEach(dot => dot.classList.remove('active'));
-        navDots[currentSlide].classList.add('active');
-    }
-
-    function nextSlide() {
-        const nextIndex = (currentSlide + 1) % slides.length;
-        goToSlide(nextIndex);
-    }
-
-    function prevSlide() {
-        const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-        goToSlide(prevIndex);
-    }
-
-    // --- Auto-play Interval ---
-    function startInterval() {
-        slideInterval = setInterval(nextSlide, 3500);
-    }
-
-    function resetInterval() {
-        clearInterval(slideInterval);
+        goToSlide(0);
         startInterval();
     }
 
-    // --- Event Listeners ---
-    nextBtn.addEventListener('click', () => {
-        nextSlide();
-        resetInterval();
-    });
+    // --- ANIMATED COUNTER (ABOUT SECTION) ---
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
+        let aboutAnimated = false;
 
-    prevBtn.addEventListener('click', () => {
-        prevSlide();
-        resetInterval();
-    });
-
-    // NEW: Pause auto-play on hover
-    slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
-    slider.addEventListener('mouseleave', () => resetInterval());
-
-    // Swipe support for mobile (from your original code)
-    let startX = 0;
-    slider.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        clearInterval(slideInterval); // Pause on touch
-    }, { passive: true });
-
-    slider.addEventListener('touchend', (e) => {
-        let endX = e.changedTouches[0].clientX;
-        if (endX - startX > 50) {
-            prevSlide();
-        } else if (startX - endX > 50) {
-            nextSlide();
-        }
-        resetInterval(); // Resume after swipe
-    });
-
-    // --- Initialize Slider ---
-    goToSlide(0); // Set initial state
-    startInterval(); // Start auto-play
-});
-
-// Animated Counter for About Section
-function animateCounter(element, target, duration = 1500) {
-    let start = 0;
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        element.textContent = Math.floor(progress * (target - start) + start);
-        if (progress < 1) {
+        function animateCounter(element, target, duration = 1500) {
+            let start = 0;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                element.textContent = Math.floor(progress * (target - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    element.textContent = target;
+                }
+            };
             window.requestAnimationFrame(step);
-        } else {
-            element.textContent = target;
         }
-    };
-    window.requestAnimationFrame(step);
-}
 
-let aboutAnimated = false;
-const aboutSection = document.getElementById('about');
-
-function handleAboutAnimation() {
-    if (!aboutAnimated && aboutSection) {
-        const rect = aboutSection.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100 && rect.bottom > 0) { // Check if at least part of the section is in view
-            const counters = document.querySelectorAll('.stat-number');
-            counters.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
-                animateCounter(counter, target, 1200 + Math.random() * 800);
-            });
-            aboutAnimated = true;
-            window.removeEventListener('scroll', handleAboutAnimation); // Remove listener after animation
-        }
-    }
-}
-
-window.addEventListener('scroll', handleAboutAnimation);
-// Also run on DOMContentLoaded in case it's already in view
-window.addEventListener('DOMContentLoaded', handleAboutAnimation);
-
-// Event Carousel Scroll
-const carousel = document.getElementById('eventsCarousel');
-const leftBtn = document.getElementById('carouselLeft');
-const rightBtn = document.getElementById('carouselRight');
-
-if (carousel && leftBtn && rightBtn) {
-    leftBtn.addEventListener('click', () => {
-        carousel.scrollBy({ left: -350, behavior: 'smooth' });
-    });
-    rightBtn.addEventListener('click', () => {
-        carousel.scrollBy({ left: 350, behavior: 'smooth' });
-    });
-}
-
-// Event Filter Chips
-document.querySelectorAll('.event-chip').forEach(chip => {
-    chip.addEventListener('click', function() {
-        document.querySelectorAll('.event-chip').forEach(c => c.classList.remove('active'));
-        this.classList.add('active');
-        const filter = this.getAttribute('data-filter');
-        document.querySelectorAll('.event-card').forEach(card => {
-            if (filter === 'all' || card.dataset.type.includes(filter)) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
+        function handleAboutAnimation() {
+            if (!aboutAnimated) {
+                const rect = aboutSection.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100 && rect.bottom > 0) {
+                    const counters = document.querySelectorAll('.stat-number');
+                    counters.forEach(counter => {
+                        const target = +counter.getAttribute('data-target');
+                        animateCounter(counter, target, 1200 + Math.random() * 800);
+                    });
+                    aboutAnimated = true;
+                    window.removeEventListener('scroll', handleAboutAnimation);
+                }
             }
+        }
+        window.addEventListener('scroll', handleAboutAnimation);
+        handleAboutAnimation(); // Also run on load in case it's already in view
+    }
+
+    // --- EVENT CAROUSEL ---
+    const carousel = document.getElementById('eventsCarousel');
+    const leftBtn = document.getElementById('carouselLeft');
+    const rightBtn = document.getElementById('carouselRight');
+    if (carousel && leftBtn && rightBtn) {
+        leftBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: -350, behavior: 'smooth' });
         });
-    });
-});
-
-// Smooth reset for contact form
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        // Changed alert to a more user-friendly message box or toast if available
-        // For now, using console.log as a placeholder for alert()
-        console.log('Thank you for your message! We will get back to you soon.');
-        contactForm.reset();
-    });
-}
-
-// FRF Modal Logic
-const frfLink = document.querySelector('.frf-link');
-const frfModal = document.getElementById('frfModal');
-const frfModalClose = document.getElementById('frfModalClose');
-const frfForm = document.getElementById('frfForm');
-const sliderSubmit = document.getElementById('sliderSubmit');
-const sliderHandle = sliderSubmit?.querySelector('.slider-handle');
-const frfToast = document.getElementById('frfToast'); // Ensure you have an element with id="frfToast" in your HTML
-
-function openFrfModal() {
-    frfModal.style.display = 'flex';
-    frfModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    if (sliderSubmit) {
-        sliderSubmit.classList.remove('submitted');
-        sliderHandle.style.left = '0';
-        sliderSubmit.style.background = '';
-    }
-}
-
-function closeFrfModal() {
-    frfModal.style.display = 'none';
-    frfModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    if (frfForm) frfForm.reset();
-}
-
-if (frfLink && frfModal && frfModalClose) {
-    frfLink.addEventListener('click', e => {
-        e.preventDefault();
-        openFrfModal();
-    });
-    frfModalClose.addEventListener('click', closeFrfModal);
-    frfModal.addEventListener('click', e => {
-        if (e.target === frfModal) closeFrfModal();
-    });
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && frfModal.style.display === 'flex') {
-            closeFrfModal();
-        }
-    });
-}
-
-// Slider Submit Logic
-if (sliderHandle && sliderSubmit && frfForm) {
-    let isDragging = false, startX = 0, currentX = 0, max = 0;
-    let hasSubmitted = false; // Flag to prevent multiple submissions
-
-    function recalcMax() {
-        max = sliderSubmit.offsetWidth - sliderHandle.offsetWidth;
+        rightBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: 350, behavior: 'smooth' });
+        });
     }
 
-    function setHandle(x) {
-        recalcMax();
-        x = Math.max(0, Math.min(x, max));
-        sliderHandle.style.left = x + 'px';
-        sliderSubmit.style.background = `linear-gradient(90deg, #43a047 ${(x + 48) / sliderSubmit.offsetWidth * 100}%, #e6f0fa 0%)`;
-
-        // Check if slider is at the end AND form is valid AND we haven't submitted yet
-        if (x >= max - 5 && frfForm.checkValidity() && !hasSubmitted) {
-            sliderSubmit.classList.add('submitted');
-            hasSubmitted = true; // Set flag to true immediately to prevent re-submission
-            frfForm.submit(); // Explicitly trigger native form submission
-
-            // No need for setTimeout or dispatchEvent here.
-            // The server will redirect, and the page will reload.
-            // The success toast will be handled by the URL parameter on the new page load.
-        } else if (x < max - 5) {
-            // Reset submitted state if slider is pulled back from the end
-            hasSubmitted = false;
-            sliderSubmit.classList.remove('submitted');
-            sliderSubmit.style.background = '';
-        } else if (x >= max - 5 && !frfForm.checkValidity()) {
-            // If at end but invalid, reset handle and report validity
-            sliderHandle.style.left = '0';
-            sliderSubmit.style.background = '';
-            sliderSubmit.classList.remove('submitted');
-            frfForm.reportValidity();
-            hasSubmitted = false; // Ensure it can be submitted once valid
-        }
+    // --- EVENT FILTER CHIPS ---
+    const eventChips = document.querySelectorAll('.event-chip');
+    if (eventChips.length > 0) {
+        eventChips.forEach(chip => {
+            chip.addEventListener('click', function() {
+                eventChips.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.getAttribute('data-filter');
+                document.querySelectorAll('.event-card').forEach(card => {
+                    if (filter === 'all' || (card.dataset.type && card.dataset.type.includes(filter))) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
     }
 
-    sliderHandle.addEventListener('mousedown', e => {
-        isDragging = true;
-        recalcMax();
-        startX = e.clientX - sliderHandle.offsetLeft;
-        document.body.style.userSelect = 'none';
-        e.preventDefault();
-    });
+    // --- CONTACT FORM ---
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Thank you for your message! We will get back to you soon.');
+            contactForm.reset();
+        });
+    }
 
-    document.addEventListener('mousemove', e => {
-        if (!isDragging) return;
-        currentX = e.clientX - startX;
-        setHandle(currentX);
-    });
-
-    document.addEventListener('mouseup', () => {
-        if (!isDragging) return;
-        recalcMax();
-        // Only reset handle if it's not already submitted (i.e., if it didn't reach the end successfully)
-        if (sliderHandle.offsetLeft < max - 5 && !hasSubmitted) {
-            setHandle(0);
+    // --- FRF MODAL ---
+    const frfLink = document.querySelector('.frf-link');
+    const frfModal = document.getElementById('frfModal');
+    const frfModalClose = document.getElementById('frfModalClose');
+    const frfForm = document.getElementById('frfForm');
+    if (frfLink && frfModal && frfModalClose) {
+        function openFrfModal() {
+            frfModal.style.display = 'flex';
+            frfModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
         }
-        isDragging = false;
-        document.body.style.userSelect = '';
-    });
-
-    // Touch support
-    sliderHandle.addEventListener('touchstart', e => {
-        isDragging = true;
-        recalcMax();
-        startX = e.touches[0].clientX - sliderHandle.offsetLeft;
-        e.preventDefault();
-    }, { passive: false });
-
-    document.addEventListener('touchmove', e => {
-        if (!isDragging) return;
-        currentX = e.touches[0].clientX - startX;
-        setHandle(currentX);
-        e.preventDefault();
-    }, { passive: false });
-
-    document.addEventListener('touchend', () => {
-        if (!isDragging) return;
-        recalcMax();
-        // Only reset handle if it's not already submitted
-        if (sliderHandle.offsetLeft < max - 5 && !hasSubmitted) {
-            setHandle(0);
+        function closeFrfModal() {
+            frfModal.style.display = 'none';
+            frfModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            if (frfForm) frfForm.reset();
         }
-        isDragging = false;
-    });
+        frfLink.addEventListener('click', e => { e.preventDefault(); openFrfModal(); });
+        frfModalClose.addEventListener('click', closeFrfModal);
+        frfModal.addEventListener('click', e => { if (e.target === frfModal) closeFrfModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && frfModal.style.display === 'flex') closeFrfModal(); });
+    }
 
-    // Keyboard accessibility
-    sliderHandle.addEventListener('keydown', e => {
-        recalcMax();
-        // Trigger submission only if not already submitted
-        if ((e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') && !hasSubmitted) {
-            if (frfForm.checkValidity()) {
-                hasSubmitted = true; // Set flag for keyboard submission
-                setHandle(max); // This will trigger frfForm.submit()
-            } else {
-                setHandle(0);
-                frfForm.reportValidity();
+    // --- FRF SLIDER SUBMIT ---
+    const sliderSubmit = document.getElementById('sliderSubmit');
+    const sliderHandle = sliderSubmit?.querySelector('.slider-handle');
+    if (sliderHandle && sliderSubmit && frfForm) {
+        let isDragging = false, startX = 0, currentX = 0, max = 0, hasSubmitted = false;
+        function recalcMax() { max = sliderSubmit.offsetWidth - sliderHandle.offsetWidth; }
+        function setHandle(x) {
+            recalcMax();
+            x = Math.max(0, Math.min(x, max));
+            sliderHandle.style.left = x + 'px';
+            sliderSubmit.style.background = `linear-gradient(90deg, #43a047 ${(x + 48) / sliderSubmit.offsetWidth * 100}%, #e6f0fa 0%)`;
+            if (x >= max - 5 && frfForm.checkValidity() && !hasSubmitted) {
+                sliderSubmit.classList.add('submitted');
+                hasSubmitted = true;
+                frfForm.submit();
+            } else if (x < max - 5) { hasSubmitted = false; sliderSubmit.classList.remove('submitted'); sliderSubmit.style.background = ''; }
+            else if (x >= max - 5 && !frfForm.checkValidity()) {
+                sliderHandle.style.left = '0'; sliderSubmit.style.background = ''; sliderSubmit.classList.remove('submitted');
+                frfForm.reportValidity(); hasSubmitted = false;
             }
-            e.preventDefault();
         }
-        // Allow resetting with left/down arrow only if not already submitted
-        if ((e.key === 'ArrowLeft' || e.key === 'ArrowDown') && !hasSubmitted) {
-            setHandle(0);
-            e.preventDefault();
-        }
-    });
-}
+        sliderHandle.addEventListener('mousedown', e => { isDragging = true; recalcMax(); startX = e.clientX - sliderHandle.offsetLeft; document.body.style.userSelect = 'none'; e.preventDefault(); });
+        document.addEventListener('mousemove', e => { if (!isDragging) return; currentX = e.clientX - startX; setHandle(currentX); });
+        document.addEventListener('mouseup', () => { if (!isDragging) return; recalcMax(); if (sliderHandle.offsetLeft < max - 5 && !hasSubmitted) setHandle(0); isDragging = false; document.body.style.userSelect = ''; });
+        sliderHandle.addEventListener('touchstart', e => { isDragging = true; recalcMax(); startX = e.touches[0].clientX - sliderHandle.offsetLeft; e.preventDefault(); }, { passive: false });
+        document.addEventListener('touchmove', e => { if (!isDragging) return; currentX = e.touches[0].clientX - startX; setHandle(currentX); e.preventDefault(); }, { passive: false });
+        document.addEventListener('touchend', () => { if (!isDragging) return; recalcMax(); if (sliderHandle.offsetLeft < max - 5 && !hasSubmitted) setHandle(0); isDragging = false; });
+        sliderHandle.addEventListener('keydown', e => {
+            recalcMax();
+            if ((e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') && !hasSubmitted) {
+                if (frfForm.checkValidity()) { hasSubmitted = true; setHandle(max); }
+                else { setHandle(0); frfForm.reportValidity(); }
+                e.preventDefault();
+            }
+            if ((e.key === 'ArrowLeft' || e.key === 'ArrowDown') && !hasSubmitted) { setHandle(0); e.preventDefault(); }
+        });
+    }
 
-// New Toast Logic to check URL parameter after redirect
-// This ensures the toast logic runs only after the DOM is fully loaded.
-document.addEventListener('DOMContentLoaded', () => {
+    // --- FRF SUCCESS TOAST (VIA URL PARAMETER) ---
     const urlParams = new URLSearchParams(window.location.search);
-    const frfToastElement = document.getElementById('frfToast'); // Get the element inside DOMContentLoaded
-
+    const frfToastElement = document.getElementById('frfToast');
     if (urlParams.get('frfSuccess') === 'true' && frfToastElement) {
         frfToastElement.textContent = "🎉 Thank you! Your feature request has been submitted.";
         frfToastElement.classList.add('active');
         setTimeout(() => {
             frfToastElement.classList.remove('active');
-            // Clean the URL parameter after showing the toast
             const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
             window.history.replaceState({ path: newUrl }, '', newUrl);
         }, 3500);
     }
-});
 
-
-// New Auth Modal Logic
-const authModal = document.getElementById('authModal');
-const authModalClose = document.getElementById('authModalClose');
-
-function openAuthModal() {
-    if (!authModal) return;
-    authModal.style.display = 'flex';
-    authModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeAuthModal() {
-    if (!authModal) return;
-    authModal.style.display = 'none';
-    authModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-}
-
-if (authModalClose) {
-    authModalClose.addEventListener('click', closeAuthModal);
-}
-
-if (authModal) {
-    authModal.addEventListener('click', e => {
-        if (e.target === authModal) closeAuthModal();
-    });
-}
-
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && authModal && authModal.style.display === 'flex') {
-        closeAuthModal();
+    // --- AUTH MODAL ---
+    const authModal = document.getElementById('authModal');
+    const authModalClose = document.getElementById('authModalClose');
+    if (authModal) {
+        function openAuthModal() { authModal.style.display = 'flex'; authModal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
+        function closeAuthModal() { authModal.style.display = 'none'; authModal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+        if (authModalClose) authModalClose.addEventListener('click', closeAuthModal);
+        authModal.addEventListener('click', e => { if (e.target === authModal) closeAuthModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && authModal.style.display === 'flex') closeAuthModal(); });
+        document.querySelectorAll('.event-register:not(:disabled)').forEach(button => button.addEventListener('click', openAuthModal));
     }
-});
 
-// Attach event listeners to all enabled register buttons to open the new auth modal
-document.querySelectorAll('.event-register:not(:disabled)').forEach(button => {
-    button.addEventListener('click', e => {
-        openAuthModal();
-    });
-});
-
-// Back to Top Button
-const backToTopBtn = document.getElementById('backToTopBtn');
-
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-        backToTopBtn.style.display = 'flex';
-    } else {
-        backToTopBtn.style.display = 'none';
+    // --- BACK TO TOP BUTTON ---
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            backToTopBtn.style.display = (window.scrollY > 300) ? 'flex' : 'none';
+        });
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     }
-});
 
-backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 });
