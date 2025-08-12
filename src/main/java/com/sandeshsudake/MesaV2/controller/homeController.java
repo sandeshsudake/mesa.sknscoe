@@ -2,6 +2,7 @@ package com.sandeshsudake.MesaV2.controller;
 
 import com.sandeshsudake.MesaV2.entity.Event;
 import com.sandeshsudake.MesaV2.entity.FRF;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,7 @@ public class homeController {
     frfRepo frfRepo;
 
     @GetMapping("")
-    public String homePage(Model model){
+    public String homePage(Model model, HttpSession session){
 
         List<Event> events = eventRepo.findAll();
         model.addAttribute("events",events);
