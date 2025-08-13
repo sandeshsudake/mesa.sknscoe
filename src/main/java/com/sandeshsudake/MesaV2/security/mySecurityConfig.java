@@ -34,6 +34,9 @@ public class mySecurityConfig {
                                 // Image folders
                                 "/mesa-logo/**", "/slider-img/**",
                                 "/mesa-team/**",   // <-- CRITICAL FIX: Added team images
+                                "/gallery-img/**",   // <-- CRITICAL FIX: Added gallery images
+                                "/seminar-img/**",   // <-- CRITICAL FIX: Added seminar images
+                                "/best-outgoing-stud/**",   // <-- CRITICAL FIX: Added best otg stud images
 
                                 // Health Check & general forms
                                 "/healthCheck", "/addFRF"

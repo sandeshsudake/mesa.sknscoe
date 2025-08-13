@@ -44,9 +44,9 @@
 </nav>
 <div class="slider" id="slider">
     <div class="slides" id="slidesContainer">
-        <img th:src="@{/slider-img/InaugurationofDepartmentEvents.png}" alt="Slide 1" class="slide" />
-        <img th:src="@{/slider-img/Spectrum.png}" alt="Slide 2" class="slide" />
-        <img th:src="@{/slider-img/speech&resumewriting.png}" alt="Slide 3" class="slide" />
+        <img th:src="@{/slider-img/slider-img-1.png}" alt="Slide 1" class="slide" />
+        <img th:src="@{/slider-img/slider-img-2.png}" alt="Slide 2" class="slide" />
+        <img th:src="@{/slider-img/slider-img-3.png}" alt="Slide 3" class="slide" />
     </div>
 
     <button class="slider-btn prev" id="prevBtn" aria-label="Previous slide">&#10094;</button>
@@ -142,44 +142,44 @@
     </div>
     <div class="gallery-grid">
         <div class="gallery-item">
-            <img src="gallery1.jpg" alt="Speech & Resume Writing Competition"/>
+            <img th:src="@{/gallery-img/gallery-img-1.png}" alt="Speech & Resume Writing Competition"/>
             <div class="gallery-caption">
-                <h3>Speech & Resume Writing Competition</h3>
+                <h3>Inauguration of Speech and Resume writing competition</h3>
                 <p>Pandharpur, Maharashtra, India</p>
             </div>
         </div>
         <div class="gallery-item">
-            <img src="gallery2.jpg" alt="Project Presentation"/>
+            <img th:src="@{/gallery-img/gallery-img-2.png}" alt="Project Presentation"/>
             <div class="gallery-caption">
-                <h3>Project Presentation</h3>
+                <h3>Participants,Runner up and Winner of Spectrum 2K23</h3>
                 <p>Innovative student projects</p>
             </div>
         </div>
         <div class="gallery-item">
-            <img src="gallery3.jpg" alt="Ribbon Cutting"/>
+            <img th:src="@{/gallery-img/gallery-img-3.png}" alt="Ribbon Cutting"/>
             <div class="gallery-caption">
-                <h3>Lab Inauguration</h3>
+                <h3>Four-wheeler Soap Modeling Activity with Chief Guest </h3>
                 <p>New facilities for students</p>
             </div>
         </div>
         <div class="gallery-item">
-            <img src="gallery4.jpg" alt="Workshop"/>
+            <img th:src="@{/gallery-img/gallery-img-4.png}" alt="Workshop"/>
             <div class="gallery-caption">
-                <h3>Automobile Workshop</h3>
+                <h3>CAD WAR</h3>
                 <p>Hands-on learning</p>
             </div>
         </div>
         <div class="gallery-item">
-            <img src="gallery5.jpg" alt="Classroom Activity"/>
+            <img th:src="@{/gallery-img/gallery-img-5.png}" alt="Classroom Activity"/>
             <div class="gallery-caption">
-                <h3>Classroom Activity</h3>
+                <h3>Career Opportunities in Product and Tool Design Sector</h3>
                 <p>Engaged learning</p>
             </div>
         </div>
         <div class="gallery-item">
-            <img src="gallery6.jpg" alt="Group Photo"/>
+            <img th:src="@{/gallery-img/gallery-img-6.png}" alt="Group Photo"/>
             <div class="gallery-caption">
-                <h3>Annual Group Photo</h3>
+                <h3>Speech & Resume Writing Competition</h3>
                 <p>Our vibrant community</p>
             </div>
         </div>
@@ -378,7 +378,7 @@
     <div class="seminars-grid">
         <div class="seminar-card">
             <div class="seminar-speaker-img">
-                <img src="speaker1.jpg" alt="Dr. Atul A Sagade"/>
+                <img th:src="@{/seminar-img/seminar-img-1.png}" alt="Dr. Atul A Sagade"/>
             </div>
             <div class="seminar-title">Seminar On Sustainable material and Energy Engineering</div>
             <div class="seminar-meta">
@@ -394,34 +394,50 @@
         </div>
         <div class="seminar-card">
             <div class="seminar-speaker-img">
-                <img src="speaker2.jpg" alt="Prof. Emily White"/>
+                <img th:src="@{/seminar-img/seminar-img-2.png}" alt="Mr. Jagdish Nagargoje"/>
             </div>
-            <div class="seminar-title">Sustainable Engineering Practices</div>
+            <div class="seminar-title">Career opportunities in siemens cad cam software</div>
             <div class="seminar-meta">
-                <span class="seminar-speaker"><i class="fa fa-user"></i> Prof. Emily White</span>
+                <span class="seminar-speaker"><i class="fa fa-user"></i> Mr. Jagdish Nagargoje</span>
             </div>
             <div class="seminar-details">
-                <span><i class="fa fa-calendar"></i> Feb 15, 2025</span>
-                <span><i class="fa fa-clock-o"></i> 02:30 PM</span>
+                <span><i class="fa fa-calendar"></i> Oct, 28, 2021</span>
+                <span><i class="fa fa-clock-o"></i> 3 PM - 4 PM </span>
             </div>
             <div class="seminar-desc">
-                Exploring eco-friendly designs and processes to minimize environmental impact in mechanical engineering.
+                Exploring Career opportunities in siemens cad cam software
             </div>
         </div>
         <div class="seminar-card">
             <div class="seminar-speaker-img">
-                <img src="speaker3.jpg" alt="Mr. Robert Chen"/>
+                <img th:src="@{/seminar-img/seminar-img-3.png}" alt="Mr. Ajit Kale"/>
             </div>
-            <div class="seminar-title">AI in Mechanical Design</div>
+            <div class="seminar-title">Computer aided mfg</div>
             <div class="seminar-meta">
-                <span class="seminar-speaker"><i class="fa fa-user"></i> Mr. Robert Chen</span>
+                <span class="seminar-speaker"><i class="fa fa-user"></i> Mr. Ajit Kale</span>
             </div>
             <div class="seminar-details">
-                <span><i class="fa fa-calendar"></i> Mar 10, 2025</span>
-                <span><i class="fa fa-clock-o"></i> 11:00 AM</span>
+                <span><i class="fa fa-calendar"></i> Oct 29, 2021</span>
+                <span><i class="fa fa-clock-o"></i> 3 PM - 4 PM</span>
             </div>
             <div class="seminar-desc">
-                How artificial intelligence is revolutionizing the way mechanical components and systems are designed and optimized.
+                Computer aided mfg
+            </div>
+        </div>
+        <div class="seminar-card">
+            <div class="seminar-speaker-img">
+                <img th:src="@{/seminar-img/seminar-img-4.png}" alt="Mr. Apoorv Bapat"/>
+            </div>
+            <div class="seminar-title">Career opportunities in FEA</div>
+            <div class="seminar-meta">
+                <span class="seminar-speaker"><i class="fa fa-user"></i> Mr. Apoorv Bapat</span>
+            </div>
+            <div class="seminar-details">
+                <span><i class="fa fa-calendar"></i> Oct 31, 2021</span>
+                <span><i class="fa fa-clock-o"></i> 10:00 AM - 11:00 AM</span>
+            </div>
+            <div class="seminar-desc">
+                Career opportunities in FEA
             </div>
         </div>
     </div>
@@ -442,12 +458,12 @@
                 <i class="fa fa-trophy"></i>
             </div>
             <div class="outgoing-img">
-                <img src="outgoing1.jpg" alt="Mr.Mayuresh Mhamane"/>
+                <img th:src="@{/best-outgoing-stud/best-outgoing-stud-1.png}" alt="Mr.Mayuresh Mhamane"/>
             </div>
             <h3 class="outgoing-name">Mr.Mayuresh Mhamane</h3>
             <p class="outgoing-year">Academic Year: 2024-25</p>
             <p class="outgoing-desc">
-                "For Selected as "BEST OUTGOING STUDENT""
+                "For Selected as "BEST OUTGOING STUDENT"
             </p>
         </div>
         <div class="outgoing-card">
@@ -455,12 +471,38 @@
                 <i class="fa fa-star"></i>
             </div>
             <div class="outgoing-img">
-                <img src="outgoing2.jpg" alt="Mr. Yashraj Gavali"/>
+                <img th:src="@{/best-outgoing-stud/best-outgoing-stud-2.png}" alt="Mr. Yashraj Gavali"/>
             </div>
             <h3 class="outgoing-name">Mr. Yashraj Gavali</h3>
             <p class="outgoing-year">Academic Year: 2024-25</p>
             <p class="outgoing-desc">
-                "For Special award "Mech Star Achiever""
+                "For Special award "Mech Star Achiever"
+            </p>
+        </div>
+        <div class="outgoing-card">
+            <div class="outgoing-badge star">
+                <i class="fa fa-star"></i>
+            </div>
+            <div class="outgoing-img">
+                <img th:src="@{/best-outgoing-stud/best-outgoing-stud-3.png}" alt="Mr. Sandip Kshirsagar"/>
+            </div>
+            <h3 class="outgoing-name">Mr. Sandip Kshirsagar</h3>
+            <p class="outgoing-year">Academic Year: 2023-24</p>
+            <p class="outgoing-desc">
+                "For Selected as "BEST OUTGOING STUDENT"
+            </p>
+        </div>
+        <div class="outgoing-card">
+            <div class="outgoing-badge star">
+                <i class="fa fa-star"></i>
+            </div>
+            <div class="outgoing-img">
+                <img th:src="@{/best-outgoing-stud/best-outgoing-stud-4.png}" alt="Mr. Onkareshwar Adhvalkar"/>
+            </div>
+            <h3 class="outgoing-name">Mr. Onkareshwar Adhvalkar</h3>
+            <p class="outgoing-year">Academic Year: 2021-2022</p>
+            <p class="outgoing-desc">
+                "For Selected as "BEST OUTGOING STUDENT"
             </p>
         </div>
     </div>
@@ -481,8 +523,8 @@
             <h3>Contact Information</h3>
             <ul class="contact-info-list">
                 <li><i class="fa fa-map-marker"></i> SKN Sinhgad College of Engineering, Pandharpur, Maharashtra 413304</li>
-                <li><i class="fa fa-envelope"></i> <a href="mailto:contact@mesa.com">contact@mesa.com</a></li>
-                <li><i class="fa fa-phone"></i> <a href="tel:+919876543210">+91 98765 43210</a></li>
+                <li><i class="fa fa-envelope"></i> <a href="mailto:contact@mesa.com">mesa.sknscoe.offl@gmail.com</a></li>
+                <li><i class="fa fa-phone"></i> <a href="tel:+919876543210">+91 9545953770</a></li>
                 <li><i class="fa fa-globe"></i> <a href="http://www.sknscoe.ac.in" target="_blank">www.sknscoe.ac.in</a></li>
             </ul>
         </div>
