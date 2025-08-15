@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MESA - Error</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/> <!-- Updated Font Awesome -->
+    <style>
+        /* Basic Reset and Global Styles */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevent scrolling */
+            font-family: 'Inter', sans-serif;
+            color: #333; /* Dark text for light background */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafd 0%, #eef5fc 100%); /* Very light, clean background */
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Subtle Background Grid/Pattern for official look */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background:
+                linear-gradient(to right, rgba(0, 123, 255, 0.02) 1px, transparent 1px), /* Very subtle blue lines */
+                linear-gradient(to bottom, rgba(0, 123, 255, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px; /* Smaller, tighter grid */
+            z-index: -1;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .error-container {
+            text-align: center;
+            background: #ffffff; /* Pure white central card */
+            padding: 50px 40px;
+            border-radius: 15px; /* Slightly less rounded for official feel */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); /* Clean, defined shadow */
+            max-width: 600px; /* Wider for better presentation */
+            width: 90%;
+            border: 1px solid #e0e6eb; /* Subtle light border */
+            animation: fadeInScale 0.8s ease-out forwards; /* Entry animation */
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        /* Error Icon */
+        .error-icon {
+            font-size: 6.5rem; /* Large, impactful icon */
+            color: #dc3545; /* Standard error red */
+            margin-bottom: 2rem;
+            animation: pulseShake 2s infinite ease-in-out; /* Subtle pulse and shake */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 0 0 10px rgba(220,53,69,0.2); /* Soft glow */
+        }
+
+        @keyframes pulseShake {
+            0%, 100% { transform: scale(1) translate3d(0, 0, 0); }
+            25% { transform: scale(1.02) translate3d(1px, 0, 0); }
+            50% { transform: scale(1) translate3d(-1px, 0, 0); }
+            75% { transform: scale(1.02) translate3d(0.5px, 0, 0); }
+        }
+
+        h1 {
+            font-size: 3.5rem; /* Commanding title */
+            color: #2c3e50; /* Deep blue-gray for strong contrast */
+            margin-bottom: 1rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle text shadow */
+        }
+
+        p {
+            font-size: 1.2rem; /* Readable body text */
+            color: #5b6f8a; /* Muted blue-gray for body */
+            line-height: 1.7;
+            margin-bottom: 3rem;
+            max-width: 85%; /* Limit line length for readability */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .home-link {
+            display: inline-block;
+            background-color: #007bff; /* Standard blue button */
+            color: #ffffff;
+            padding: 14px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0,123,255,0.2);
+            border: none;
+        }
+
+        .home-link:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,123,255,0.3);
+        }
+
+        /* Footer for error page */
+        .error-footer {
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #8b9bb0; /* Muted light text */
+            padding: 0 20px;
+            box-sizing: border-box;
+            animation: fadeIn 1.5s ease-out forwards 0.5s;
+            opacity: 0;
+        }
+        .error-footer a {
+            color: #007bff; /* Standard blue for links */
+            text-decoration: none;
+            transition: color 0.2s, text-decoration 0.2s;
+        }
+        .error-footer a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        /* Keyframe for container entry animation */
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 35px 25px;
+                max-width: 90%;
+                border-radius: 12px;
+            }
+            .error-icon {
+                font-size: 4.5rem;
+                margin-bottom: 1.5rem;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            p {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+            }
+            .home-link {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
+            .error-footer {
+                font-size: 0.8rem;
+                bottom: 15px;
+                padding: 0 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-container {
+                padding: 25px 15px;
+                border-radius: 10px;
+            }
+            .error-icon {
+                font-size: 3.5rem;
+                margin-bottom: 1rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            p {
+                font-size: 0.9rem;
+                margin-bottom: 1.5rem;
+            }
+            .home-link {
+                padding: 8px 18px;
+                font-size: 0.85rem;
+            }
+            .error-footer {
+                font-size: 0.75rem;
+                bottom: 10px;
+                padding: 0 10px;
+            }
+        }
+
+        @media (max-height: 600px) and (max-width: 768px) { /* Landscape phones / very short screens */
+            body {
+                justify-content: flex-start; /* Align to top */
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            .error-container {
+                padding: 20px 15px;
+                margin-top: 0;
+            }
+            .error-icon {
+                font-size: 3rem;
+                margin-bottom: 0.8rem;
+            }
+            h1 {
+                font-size: 1.6rem;
+                margin-bottom: 0.5rem;
+            }
+            p {
+                font-size: 0.8rem;
+                margin-bottom: 1rem;
+            }
+            .home-link {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+            .error-footer {
+                position: static; /* Let it flow with content */
+                margin-top: 1rem;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="error-container">
+    <i class="fa-solid fa-triangle-exclamation error-icon" aria-hidden="true"></i> <!-- Updated Font Awesome icon class -->
+    <h1 th:text="${status} ? ${status} + ' Error' : 'Oops! Something went wrong.'">Error</h1>
+    <p th:text="${message} ?: 'We\'re sorry, but an unexpected error occurred. Please try again later. Our team has been notified and is working to resolve the issue.'">
+        We're sorry, but an unexpected error occurred. Please try again later. Our team has been notified and is working to resolve the issue.
+    </p>
+    <a th:href="@{/}" class="home-link">Go to Homepage</a>
+</div>
+<div class="error-footer">
+    &copy; 2025 MESA. All rights reserved. | For technical inquiries, please refer to our <a href="mailto:sandeshsudake818@gmail.com">IT Support team</a>.
+</div>
+</body>
+</html>

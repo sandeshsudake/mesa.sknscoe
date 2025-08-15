@@ -26,7 +26,7 @@ public class mySecurityConfig {
                         // --- PUBLIC ACCESS: Permit all public-facing endpoints and static resources ---
                         .requestMatchers(
                                 // Core public pages
-                                "/", "/index.html", "/home/**",
+                                "/", "/index.html", "/home/**","/error", "/error.html",
 
                                 // Static Resources (CSS, JS, etc.)
                                 "/css/**", "/js/**", "/static/**", "/assets/**", "/webjars/**", "/favicon.ico",
