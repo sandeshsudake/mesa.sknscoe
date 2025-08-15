@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MESA - User Profile</title>
     <link rel="icon" type="image/png" th:href="@{/mesa-logo/MESA-Logo.jpg}"/>
-    <link rel="stylesheet" th:href="@{/css/user.css}" />
+    <link rel="stylesheet" th:href="@{/css/user.css}"/>
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -13,6 +13,10 @@
 
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- CRITICAL: CSRF Token Meta Tags for AJAX POST requests -->
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 </head>
 <body>
 <nav class="navbar">
@@ -151,7 +155,15 @@
             </div>
         </div>
         <div class="events-carousel" id="eventsCarousel">
-            <div class="event-card" th:each="event : ${events}" th:data-id="${event.eventId}" th:data-reg-type="${event.eventType}">
+            <!-- Modify your existing <div class="event-card"> like this: -->
+            <div class="event-card" th:each="event : ${events}" th:data-id="${event.eventId}"
+                 th:data-reg-type="${event.eventType}"
+                 th:data-event-name="${event.eventName}"
+                 th:data-event-desc="${event.eventDesc}"
+                 th:data-event-day="${event.eventDay}"
+                 th:data-event-month="${event.eventMonth}"
+                 th:data-event-time="${event.eventTime}"
+                 th:data-event-location="${event.eventLocation}">
                 <div class="event-date">
                     <span class="event-day" th:text="${event.eventDay}"></span>
                     <span class="event-month" th:text="${event.eventMonth}"></span>
@@ -164,8 +176,15 @@
                         <img th:src="${event.qrImgURL}" class="event-qr-code" hidden height="450px">
                     </div>
                     <p th:text="${event.eventDesc}"></p>
-                    <a th:if="${event.eventType == 'form'}" class="event-register" href="#" th:data-id="${event.eventId}">Register</a>
-                    <a th:if="${event.eventType == 'link'}" class="event-register" th:href="${event.eventRegLink}" target="_blank">Register</a>
+                    <!-- CRITICAL: Add this div for button grouping -->
+                    <div class="event-actions">
+                        <a th:if="${event.eventType == 'form'}" class="event-register" href="#" th:data-id="${event.eventId}">Register</a>
+                        <a th:if="${event.eventType == 'link'}" class="event-register" th:href="${event.eventRegLink}" target="_blank">Register</a>
+                        <!-- New AI Insights Button -->
+                        <button class="ai-insights-btn" th:data-event-id="${event.eventId}">
+                            <i class="fa fa-magic ai-icon"></i> AI Insights
+                        </button>
+                    </div>
                 </div>
                 <span class="event-badge new">New</span>
             </div>
@@ -242,6 +261,36 @@
         </form>
     </div>
 </div>
+
+
+
+
+<!-- AI Insights Modal (Place this at the bottom of user.html, similar to other modals) -->
+<div id="aiInsightsModal" class="modal-overlay" tabindex="-1" aria-modal="true" aria-hidden="true">
+    <div class="modal-content ai-insights-modal-content">
+        <button class="modal-close" id="aiInsightsModalClose" aria-label="Close">&times;</button>
+        <h2 class="modal-title">AI Insights: <span id="aiEventName"></span></h2>
+        <div class="modal-body-ai">
+            <div id="aiInsightsLoader" class="ai-loader-container">
+                <div class="ai-loader"></div>
+                <p>Generating insights...</p>
+            </div>
+            <div id="aiInsightsContent" class="ai-content-area hidden">
+                <p id="aiInsightsText"></p>
+            </div>
+            <div id="aiInsightsError" class="alert alert-danger hidden">
+                <i class="fa fa-exclamation-circle"></i>
+                <span id="aiInsightsErrorText"></span>
+            </div>
+        </div>
+        <div class="ai-disclaimer">
+            <i class="fa fa-info-circle"></i>
+            <p>AI-generated content. May contain inaccuracies. Always verify critical information.</p>
+        </div>
+    </div>
+</div>
+
+
 
 <div id="eventLinkModal" class="modal-overlay" tabindex="-1" aria-modal="true" aria-hidden="true">
     <div class="modal-content text-center">

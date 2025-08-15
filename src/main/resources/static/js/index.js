@@ -166,6 +166,152 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- AI INSIGHTS FEATURE ---
+    // AI Insights Modal Elements
+    const aiInsightsModal = document.getElementById('aiInsightsModal');
+    const aiInsightsModalClose = document.getElementById('aiInsightsModalClose');
+    const aiEventNameSpan = document.getElementById('aiEventName');
+    const aiInsightsLoader = document.getElementById('aiInsightsLoader');
+    const aiInsightsContent = document.getElementById('aiInsightsContent');
+    const aiInsightsText = document.getElementById('aiInsightsText');
+    const aiInsightsError = document.getElementById('aiInsightsError');
+    const aiInsightsErrorText = document.getElementById('aiInsightsErrorText');
+
+    // Reusing your existing openModal/closeModal functions (ensure they are defined globally or within this scope)
+    // If you don't have them, add them here:
+    function openModal(modal) {
+        if (!modal) return;
+        modal.style.display = 'flex';
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(modal) {
+        if (!modal) return;
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Function to convert basic markdown to HTML
+    function convertMarkdownToHtml(markdownText) {
+        let htmlText = markdownText;
+        // Convert bold: **text** to <strong>text</strong>
+        htmlText = htmlText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Convert bullet points: - item to <li>item</li> within an <ul>
+        // This is a basic conversion; for complex lists, a dedicated markdown parser is better.
+        // It assumes bullet points are at the start of a line.
+        htmlText = htmlText.replace(/^- (.*)$/gm, '<li>$1</li>');
+        if (htmlText.includes('<li>')) {
+            htmlText = '<ul>' + htmlText + '</ul>';
+        }
+        // Convert newlines to <br> for basic line breaks
+        htmlText = htmlText.replace(/\n/g, '<br>');
+        return htmlText;
+    }
+
+
+    // Function to open the AI Insights modal and fetch data
+    function openAiInsightsModal(eventName, eventDesc, eventDay, eventMonth, eventTime, eventLocation) {
+        if (!aiInsightsModal) return;
+
+        // Reset modal content
+        aiEventNameSpan.textContent = eventName;
+        aiInsightsText.textContent = '';
+        aiInsightsContent.classList.add('hidden');
+        aiInsightsError.classList.add('hidden');
+        aiInsightsErrorText.textContent = '';
+        aiInsightsLoader.classList.remove('hidden'); // Show loader
+
+        openModal(aiInsightsModal); // Use your existing openModal function
+
+        // Construct the REVISED prompt for the AI
+        const prompt = `Provide a concise, professional summary for a mechanical engineering student about the event: "${eventName}".\n\n` +
+                       `Event Details:\n` +
+                       `- Description: ${eventDesc}\n` +
+                       `- Date: ${eventDay} ${eventMonth}\n` +
+                       `- Time: ${eventTime}\n` +
+                       `- Location: ${eventLocation}\n\n` +
+                       `Your response should be structured as follows:\n` +
+                       `1. **Event Overview:** A very brief, engaging sentence.\n` +
+                       `2. **Key Benefits for ME Students:** Use 3-4 concise bullet points.\n` +
+                       `3. **Why Attend?** A short, impactful concluding sentence.\n\n` +
+                       `Maintain a professional and encouraging tone. Limit the entire response to 60-100 words.`;
+
+        // Make API call to your Spring Boot backend
+        fetch('/api/ai-insights', { // Your new Spring Boot endpoint
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Include CSRF token if your API is not excluded from CSRF protection
+                'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content // Assuming CSRF token meta tag
+            },
+            body: JSON.stringify({ prompt: prompt })
+        })
+        .then(response => {
+            if (!response.ok) {
+                // If response is not OK (e.g., 400, 500), throw an error
+                return response.json().then(errorData => {
+                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            aiInsightsLoader.classList.add('hidden'); // Hide loader
+            if (data.status === 'success') {
+                // Use innerHTML and convert markdown to HTML
+                aiInsightsText.innerHTML = convertMarkdownToHtml(data.response);
+                aiInsightsContent.classList.remove('hidden'); // Show content
+            } else {
+                aiInsightsErrorText.textContent = data.message || 'Failed to generate insights.';
+                aiInsightsError.classList.remove('hidden'); // Show error
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching AI insights:', error);
+            aiInsightsLoader.classList.add('hidden'); // Hide loader
+            aiInsightsErrorText.textContent = 'Failed to connect to AI service or generate insights. Please try again later.';
+            aiInsightsError.classList.remove('hidden'); // Show error
+        });
+    }
+
+    // Event Listeners for AI Insights Button (within DOMContentLoaded if it exists)
+    const eventsCarousel = document.getElementById('eventsCarousel');
+    if (eventsCarousel) {
+        eventsCarousel.addEventListener('click', function(e) {
+            // Check if the clicked element is the AI Insights button or its child icon
+            if (e.target.classList.contains('ai-insights-btn') || e.target.closest('.ai-insights-btn')) {
+                e.preventDefault();
+                const btn = e.target.closest('.ai-insights-btn'); // Get the button element
+                const eventCard = btn.closest('.event-card'); // Get the parent event card
+
+                if (eventCard) {
+                    // Extract data from data-attributes
+                    const eventName = eventCard.dataset.eventName;
+                    const eventDesc = eventCard.dataset.eventDesc;
+                    const eventDay = eventCard.dataset.eventDay;
+                    const eventMonth = eventCard.dataset.eventMonth;
+                    const eventTime = eventCard.dataset.eventTime;
+                    const eventLocation = eventCard.dataset.eventLocation;
+
+                    openAiInsightsModal(eventName, eventDesc, eventDay, eventMonth, eventTime, eventLocation);
+                }
+            }
+        });
+    }
+
+    // Close AI Insights modal
+    if (aiInsightsModalClose) {
+        aiInsightsModalClose.addEventListener('click', () => closeModal(aiInsightsModal));
+    }
+    if (aiInsightsModal) {
+        aiInsightsModal.addEventListener('click', (e) => {
+            if (e.target === aiInsightsModal) closeModal(aiInsightsModal);
+        });
+    }
+
+
     // --- CONTACT FORM ---
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {

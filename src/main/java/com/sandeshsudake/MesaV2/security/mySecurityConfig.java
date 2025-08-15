@@ -39,7 +39,8 @@ public class mySecurityConfig {
                                 "/best-outgoing-stud/**",   // <-- CRITICAL FIX: Added best otg stud images
 
                                 // Health Check & general forms
-                                "/healthCheck", "/addFRF"
+                                "/healthCheck", "/addFRF",
+                                "/api/ai-insights"               // <-- CRITICAL FIX: Permit access to AI API endpoint
                         ).permitAll()
                         // --- PUBLIC ACCESS (Method Specific): Permit specific HTTP methods for user registration ---
                         .requestMatchers(HttpMethod.GET, "/userRegForm").permitAll()
